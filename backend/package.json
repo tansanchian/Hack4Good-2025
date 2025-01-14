@@ -2,16 +2,18 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {         
-    "dev": "nodemon src/index.ts",          
-    "build": "tsc"                          
+  "scripts": {
+    "dev": "nodemon src/index.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^4.21.2"
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.5"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
