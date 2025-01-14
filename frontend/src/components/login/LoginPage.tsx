@@ -14,9 +14,9 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import ForgotPasswordDialog from './ForgotPasswordDialog';
-import { GoogleIcon, FacebookIcon, SitemarkIcon } from './CustomIcons';
 import AppTheme from '../../shared-theme/AppTheme';
 import ColorModeSelect from '../../shared-theme/ColorModeSelect';
+import Logo from '../Logo';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -120,7 +120,7 @@ export default function LoginPage(props: { disableCustomTheme?: boolean }) {
       <SignInContainer direction="column" justifyContent="space-between">
         <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
         <Card variant="outlined">
-          <SitemarkIcon />
+          <Logo />
           <Typography
             component="h1"
             variant="h4"
@@ -196,24 +196,8 @@ export default function LoginPage(props: { disableCustomTheme?: boolean }) {
               Forgot your password?
             </Link>
           </Box>
-          <Divider>or</Divider>
+          <Divider></Divider>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign in with Google')}
-              startIcon={<GoogleIcon />}
-            >
-              Sign in with Google
-            </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign in with Facebook')}
-              startIcon={<FacebookIcon />}
-            >
-              Sign in with Facebook
-            </Button>
             <Typography sx={{ textAlign: 'center' }}>
               Don&apos;t have an account?{' '}
               <Link
