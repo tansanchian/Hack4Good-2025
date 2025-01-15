@@ -34,18 +34,21 @@ export const protectRoute = async (req: Request, res: Response, next: NextFuncti
 		const token = req.cookies.jwt;
 		if (!token) {
 			res.status(401).json({ error: "Unauthorized: No Token Provided" });
+			return;
 		}
 
 		// Verify the token against the JWT secret
 		const decoded = jwt.verify(token, JWT_SECRET) as CustomJwtPayload;
 		if (!decoded) {
 			res.status(401).json({ error: "Unauthorized: Invalid Token" });
+			return;
 		}
 
 		// Find the user in the database based on decoded user ID
 		const user = await User.findById(decoded.userId).select("-password");
 		if (!user) {
 			res.status(404).json({ error: "User not found" });
+			return;
 		}
 
 		req.user = user;
