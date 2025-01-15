@@ -39,18 +39,21 @@ export async function createUser(req: Request, res: Response) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       res.status(400).json({ message: "Invalid email format" });
+      return;
     }
 
-    // Username uniqueness check
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      res.status(400).json({ message: "Username is already taken" });
-    }
+    // // Username uniqueness check
+    // const existingUser = await User.findOne({ username });
+    // if (existingUser) {
+    //   res.status(400).json({ message: "Username is already taken" });
+    //   return;
+    // }
 
     // Email uniqueness check
     const existingEmail = await User.findOne({ email });
     if (existingEmail) {
-      res.status(400).json({ message: "Email is already taken" });
+      res.status(400).json({ message: "Email is already taken" });      
+      return;
     }
 
     // Password strength validation
@@ -61,6 +64,7 @@ export async function createUser(req: Request, res: Response) {
 
     if (!isPasswordValid()) {
       res.status(400).json({ message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter and one digit. Special characters must be these: - ?!@#$%^&*\/\\" });
+      return;
     }
 
     // Hash the password and create the user
@@ -82,8 +86,10 @@ export async function createUser(req: Request, res: Response) {
         username: newUser.username,
         email: newUser.email,
       });
+      return;
     } else {
       res.status(400).json({ message: "Invalid user data" });
+      return;
     }
   } catch (err) {
     console.error(err);
@@ -220,12 +226,12 @@ export const updateUser = async (req: Request, res: Response) => {
       return;
     }
 
-    // Check if the new username is already in use by another user
-    const existingUser = await User.findOne({ username });
-    if (existingUser && existingUser.username !== user.username) {
-      res.status(400).json({ message: "Username is already taken" });
-      return;
-    }
+    // // Check if the new username is already in use by another user
+    // const existingUser = await User.findOne({ username });
+    // if (existingUser && existingUser.username !== user.username) {
+    //   res.status(400).json({ message: "Username is already taken" });
+    //   return;
+    // }
 
     // Check if the new email is already in use by another user
     const existingEmail = await User.findOne({ email });
