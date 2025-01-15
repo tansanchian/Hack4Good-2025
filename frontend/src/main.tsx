@@ -7,9 +7,10 @@ import Dashboard from "./Dashboard";
 import Home from "./components/pages/home";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import HomeAdmin from "./components/pages/homeAdmin";
-import Transactions from "./components/pages/transactions";
-import Vouchers from "./components/pages/vouchers";
-import Users from "./components/pages/users";
+import Transactions from "./components/pages/Transactions";
+import Vouchers from "./components/pages/Vouchers";
+import Users from "./components/pages/Users";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const root = document.getElementById("root");
 
