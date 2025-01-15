@@ -5,9 +5,9 @@ import LoginPage from "./components/login/LoginPage";
 import SignupPage from "./components/signup/SignupPage";
 import Dashboard from "./Dashboard";
 import Home from "./components/pages/home";
-import Home1 from "./components/pages/home1";
-import Home2 from "./components/pages/home2";
-import Home3 from "./components/pages/home3";
+import Transactions from "./components/pages/transactions";
+import Vouchers from "./components/pages/vouchers";
+import Users from "./components/pages/users";
 
 const root = document.getElementById("root");
 
@@ -20,9 +20,9 @@ ReactDOM.createRoot(root!).render(
 
       <Route path="/" element={<Dashboard />}>
         <Route index element={<Home />} />
-        <Route path="home1" element={<Home1 />} />
-        <Route path="home2" element={<Home2 />} />
-        <Route path="home3" element={<Home3 />} />
+        <Route path="transactions" element={<Transactions />} />
+        <Route path="vouchers" element={<Vouchers />} />
+        <Route path="users" element={<Users />} />
       </Route>
     </Routes>
   </BrowserRouter>

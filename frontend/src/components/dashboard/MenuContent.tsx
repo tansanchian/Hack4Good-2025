@@ -17,9 +17,13 @@ import { Link } from "react-router";
 export default function MenuContent() {
   const mainListItems = [
     { text: "Home", icon: <HomeRoundedIcon />, path: "/" },
-    { text: "Analytics", icon: <AnalyticsRoundedIcon />, path: "/home1" },
-    { text: "Clients", icon: <PeopleRoundedIcon />, path: "/home2" },
-    { text: "Tasks", icon: <AssignmentRoundedIcon />, path: "/home3" },
+    {
+      text: "Transactions",
+      icon: <AnalyticsRoundedIcon />,
+      path: "/transactions",
+    },
+    { text: "Users", icon: <PeopleRoundedIcon />, path: "/users" },
+    { text: "Vouchers", icon: <AssignmentRoundedIcon />, path: "/vouchers" },
   ];
 
   const secondaryListItems = [
