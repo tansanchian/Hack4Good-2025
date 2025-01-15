@@ -6,6 +6,8 @@ import { DataGrid, GridRowClassNameParams, GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UpdateUser from "../UpdateUser";
+import { getUsers } from "../../api/user";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface UserRow {
   id: number;
@@ -22,6 +24,7 @@ const Users: React.FC = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserRow | null>(null);
   const [loading, setLoading] = useState(false);
+  const { auth } = useAuth();
 
   const handleClickOpenUpdate = (row: UserRow) => {
     setLoading(true);
@@ -53,54 +56,7 @@ const Users: React.FC = () => {
     console.log("Delete user with email:", email);
   };
 
-  const columns: GridColDef[] = [
-    { field: "name", headerName: "Name", editable: false, width: 150 },
-    { field: "email", headerName: "Email", editable: false, width: 300 },
-    {
-      field: "phonenumber",
-      headerName: "Phone Number",
-      editable: false,
-      width: 150,
-    },
-    { field: "voucher", headerName: "Voucher", editable: false, width: 120 },
-    { field: "admin", headerName: "Admin", editable: false, width: 70 },
-    { field: "sex", headerName: "Gender", editable: false, width: 70 },
-    { field: "active", headerName: "Active", editable: false, width: 70 },
-    {
-      field: "actions",
-      headerName: "Actions",
-      width: 100,
-      headerAlign: "center",
-      align: "center",
-      renderCell: (params) => (
-        <Box>
-          <IconButton
-            sx={{
-              border: "none",
-              borderRadius: "50%",
-            }}
-            aria-label="edit"
-            onClick={() => handleClickOpenUpdate(params.row as UserRow)}
-          >
-            <EditIcon fontSize="small" sx={{ color: "blue" }} />
-          </IconButton>
-
-          <IconButton
-            sx={{
-              border: "none",
-              borderRadius: "50%",
-            }}
-            aria-label="delete"
-            onClick={() => handleClickOpenDelete((params.row as UserRow).email)}
-          >
-            <DeleteIcon fontSize="small" sx={{ color: "red" }} />
-          </IconButton>
-        </Box>
-      ),
-    },
-  ];
-
-  const rows: UserRow[] = [
+  const DEFAULT_ROWS: UserRow[] = [
     {
       id: 1,
       name: "John Doe",
@@ -142,6 +98,78 @@ const Users: React.FC = () => {
       active: true,
     },
   ];
+
+  const [ rows, setRows ] = useState<UserRow[]>(DEFAULT_ROWS);
+
+  const columns: GridColDef[] = [
+    { field: "name", headerName: "Name", editable: false, width: 150 },
+    { field: "email", headerName: "Email", editable: false, width: 300 },
+    {
+      field: "phonenumber",
+      headerName: "Phone Number",
+      editable: false,
+      width: 150,
+    },
+    { field: "voucher", headerName: "Voucher", editable: false, width: 120 },
+    { field: "admin", headerName: "Admin", editable: false, width: 70 },
+    { field: "sex", headerName: "Gender", editable: false, width: 70 },
+    { field: "active", headerName: "Active", editable: false, width: 70 },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 100,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => ( auth.id !== params.id ? (
+        <Box>
+          <IconButton
+            sx={{
+              border: "none",
+              borderRadius: "50%",
+            }}
+            aria-label="edit"
+            onClick={() => handleClickOpenUpdate(params.row as UserRow)}
+          >
+            <EditIcon fontSize="small" sx={{ color: "blue" }} />
+          </IconButton>
+
+          <IconButton
+            sx={{
+              border: "none",
+              borderRadius: "50%",
+            }}
+            aria-label="delete"
+            onClick={() => handleClickOpenDelete((params.row as UserRow).email)}
+          >
+            <DeleteIcon fontSize="small" sx={{ color: "red" }} />
+          </IconButton>
+        </Box>
+      ) : <></> ),
+    },
+  ];
+
+  // get users from database
+  useEffect(() => {
+    getUsers().then(response => {
+      if (response.status === 200) {
+        setRows(response.data.map((row : any) => {
+          return {
+            id: row._id,
+            name: row.username,
+            email: row.email,
+            voucher: row.voucher,
+            phonenumber: row.phonenumber,
+            sex: row.gender,
+            admin: row.isAdmin,
+            active: true,
+          } as UserRow
+        }));
+      } else {
+        console.error("Could not fetch users!");
+        setRows(DEFAULT_ROWS);
+      }
+    })
+  }, []);
 
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>

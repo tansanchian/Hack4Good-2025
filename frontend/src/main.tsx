@@ -115,13 +115,12 @@ ReactDOM.createRoot(root!).render(
           <Route path="products" element={<Products />} />
           <Route path="transactions" element={<Transactions />} />
           <Route path="voucherTask" element={<VoucherTask />} />
-          <Route path="users" element={<Users />} />
           <Route path="voucherApproval" element={<VoucherApprovalReject />} />
           <Route
-            path="manage-users"
+            path="users"
             element={
               <AdminRoute
-                adminRoute={<Home />}
+                adminRoute={<Users />}
                 nonAdminRoute={<Navigate to="/" />}
               />
             }

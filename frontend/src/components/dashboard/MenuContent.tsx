@@ -23,7 +23,6 @@ import {
   ReceiptLong,
   TaskRounded,
 } from "@mui/icons-material";
-import PeopleRounded from "@mui/icons-material/PeopleRounded";
 import AssignmentRounded from "@mui/icons-material/AssignmentRounded";
 
 export default function MenuContent() {
@@ -35,8 +34,7 @@ export default function MenuContent() {
       icon: <AnalyticsRoundedIcon />,
       path: "/transactions",
     },
-    { text: "Users", icon: <PeopleRounded />, path: "/users" },
-    { text: "Voucher Task", icon: <AssignmentRounded />, path: "/VoucherTask" },
+    { text: "Voucher Task", icon: <AssignmentRounded />, path: "/voucherTask" },
     {
       text: "Voucher Approval",
       icon: <AssignmentRounded />,
@@ -45,7 +43,7 @@ export default function MenuContent() {
   ];
 
   const adminListItems = [
-    { text: "Manage Users", icon: <ManageAccounts />, path: "/manage-users" },
+    { text: "Manage Users", icon: <ManageAccounts />, path: "/users" },
     {
       text: "Manage Requests",
       icon: <ReceiptLong />,
@@ -71,16 +69,21 @@ export default function MenuContent() {
     const path = getPathName();
 
     for (index = 0; index < mainListItems.length; index++) {
-      if (path === mainListItems[index].path) break;
+      if (path === mainListItems[index].path) {
+        setSelectedIndex(index);
+        return;
+      };
     }
     for (
       index = mainListItems.length;
       index < mainListItems.length + adminListItems.length;
       index++
     ) {
-      if (path === adminListItems[index - mainListItems.length].path) break;
+      if (path === adminListItems[index - mainListItems.length].path) {
+        setSelectedIndex(index);
+        return;
+      }
     }
-    setSelectedIndex(index);
   });
 
   const handleListItemClick = (index: number) => {
