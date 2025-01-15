@@ -5,9 +5,6 @@ import LoginPage from "./components/login/LoginPage";
 import SignupPage from "./components/signup/SignupPage";
 import Dashboard from "./Dashboard";
 import Home from "./components/pages/home";
-import Home1 from "./components/pages/home1";
-import Home2 from "./components/pages/home2";
-import Home3 from "./components/pages/home3";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import HomeAdmin from "./components/pages/homeAdmin";
 import Transactions from "./components/pages/transactions";
@@ -115,7 +112,7 @@ ReactDOM.createRoot(root!).render(
           </PrivateRoute>
         }>
           <Route index element={<Home />} />
-          <Route path="products" element={<Home1 />} />
+          <Route path="products" element={<Home />} />
           <Route path="transactions" element={<Transactions />} />
           <Route path="vouchers" element={<Vouchers />} />
           <Route path="users" element={<Users />} />
