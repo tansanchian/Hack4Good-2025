@@ -123,7 +123,7 @@ export default function LoginPage(props: { disableCustomTheme?: boolean }) {
 
     // proceed with login
     if (isValid) {
-      login("", "123", "", email.value, false);
+      login("", "123", "", email.value, (email.value === "admin@admin.com"));
     }
   }
 

@@ -111,9 +111,9 @@ ReactDOM.createRoot(root!).render(
           </PrivateRoute>
         }>
           <Route index element={<Home />} />
-          <Route path="home1" element={<Home1 />} />
-          <Route path="home2" element={<Home2 />} />
-          <Route path="home3" element={<Home3 />} />
+          <Route path="products" element={<Home1 />} />
+          <Route path="vouchers" element={<Home2 />} />
+          <Route path="history" element={<Home3 />} />
         </Route>
       </Routes>
     </BrowserRouter>

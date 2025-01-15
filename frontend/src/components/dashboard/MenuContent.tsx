@@ -13,13 +13,17 @@ import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
 import { Link } from "react-router";
+import HistoryRounded from "@mui/icons-material/HistoryRounded";
+import ShoppingCart from "@mui/icons-material/ShoppingCart";
+import { useEffect } from "react";
+import { getPathName } from "../../utils/utils";
 
 export default function MenuContent() {
   const mainListItems = [
     { text: "Home", icon: <HomeRoundedIcon />, path: "/" },
-    { text: "Analytics", icon: <AnalyticsRoundedIcon />, path: "/home1" },
-    { text: "Clients", icon: <PeopleRoundedIcon />, path: "/home2" },
-    { text: "Tasks", icon: <AssignmentRoundedIcon />, path: "/home3" },
+    { text: "Products", icon: <ShoppingCart />, path: "/products" },
+    { text: "Vouchers", icon: <AnalyticsRoundedIcon />, path: "/vouchers" },
+    { text: "Transaction History", icon: <HistoryRounded />, path: "/history" },
   ];
 
   const secondaryListItems = [
@@ -29,6 +33,18 @@ export default function MenuContent() {
   ];
 
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+
+  useEffect(() => {
+    let index : number = 0;
+
+    // path (may include / at the end)
+    const path = getPathName();
+
+    for (index = 0; index < mainListItems.length; index++) {
+      if (path === mainListItems[index].path) break;
+    }
+    setSelectedIndex(index);
+  });
 
   const handleListItemClick = (index: number) => {
     setSelectedIndex(index);
