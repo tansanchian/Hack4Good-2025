@@ -15,7 +15,7 @@ const VoucherTask = () => {
   const [tasks, setTasks] = useState<any[]>([
     {
       id: 1,
-      name: "Im Approving",
+      title: "Im Approving",
       description: "Log in daily to earn points",
       points: 10,
       isCompleted: true,
@@ -24,7 +24,7 @@ const VoucherTask = () => {
     },
     {
       id: 2,
-      name: "Im Doing",
+      title: "Im Doing",
       description: "Buy something from the mart to earn rewards",
       points: 20,
       isCompleted: false,
@@ -33,7 +33,7 @@ const VoucherTask = () => {
     },
     {
       id: 3,
-      name: "I passed",
+      title: "I passed",
       description: "Buy something from the mart to earn rewards",
       points: 20,
       isCompleted: true,
@@ -42,7 +42,7 @@ const VoucherTask = () => {
     },
     {
       id: 4,
-      name: "I failed",
+      title: "I failed",
       description: "Buy something from the mart to earn rewards",
       points: 20,
       isCompleted: false,
@@ -93,17 +93,19 @@ const VoucherTask = () => {
 
       {filteredTasks[currentTab].map((task) => (
         <Card
+          key={task.id}
           sx={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            height: "100%",
+            height: "100%", // Ensures card height grows as necessary
             marginBottom: "10px",
+            position: "relative", // Allow absolute positioning of elements inside the card
           }}
         >
           <CardContent sx={{ flexGrow: 1 }}>
             <Typography variant="h6" gutterBottom>
-              {task.name}
+              {task.title}
             </Typography>
             <Typography variant="body2" gutterBottom>
               {task.description}
@@ -111,18 +113,31 @@ const VoucherTask = () => {
             <Typography variant="body2" sx={{ marginBottom: 2 }}>
               Points: {task.points}
             </Typography>
-            {currentTab === 0 && (
-              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                <Button
-                  onClick={() => completeTask(task.id)}
-                  variant="contained"
-                  color="secondary"
-                >
-                  Complete Task
-                </Button>
-              </Box>
-            )}
           </CardContent>
+
+          {/* Positioning the button at the bottom-right */}
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: 16, // 16px from the bottom of the card
+              right: 16, // 16px from the right side of the card
+              display: "flex",
+              gap: 1,
+              flexDirection: "column", // Stack buttons vertically if needed
+              alignItems: "flex-end",
+            }}
+          >
+            {currentTab === 0 && (
+              <Button
+                onClick={() => completeTask(task.id)}
+                variant="contained"
+                color="secondary"
+                sx={{ width: "120px" }}
+              >
+                Complete
+              </Button>
+            )}
+          </Box>
         </Card>
       ))}
 

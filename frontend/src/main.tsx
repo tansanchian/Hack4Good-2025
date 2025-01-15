@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Products from "./components/pages/Products";
 import Transactions from "./components/pages/Transactions";
 import VoucherTask from "./components/pages/VoucherTask";
+import VoucherApprovalReject from "./components/pages/VoucherApprovalReject";
 import Users from "./components/pages/Users";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -115,6 +116,7 @@ ReactDOM.createRoot(root!).render(
           <Route path="transactions" element={<Transactions />} />
           <Route path="voucherTask" element={<VoucherTask />} />
           <Route path="users" element={<Users />} />
+          <Route path="voucherApproval" element={<VoucherApprovalReject />} />
           <Route
             path="manage-users"
             element={
