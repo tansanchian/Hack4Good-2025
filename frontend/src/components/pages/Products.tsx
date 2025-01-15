@@ -1,4 +1,5 @@
 import { Row, Col } from "reactstrap";
+import { Box, Typography } from "@mui/material";
 import Product from "../dashboard/Product";
 import bg1 from "../../assets/bg1.jpg";
 import bg2 from "../../assets/bg2.jpg";
@@ -44,11 +45,13 @@ const ProductData: ProductDataType[] = [
   },
 ];
 
-
-
-export default function Home2() {
+export default function Products() {
   return (
-    <div>
+    <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
+      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+        Products
+      </Typography>
+
       <Row>
         {ProductData.map((item, index) => (
           <Col xs="12" sm="6" md="4" key={index}>
@@ -62,6 +65,6 @@ export default function Home2() {
           </Col>
         ))}
       </Row>
-    </div>
+    </Box>
   );
 }
