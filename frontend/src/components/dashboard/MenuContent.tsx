@@ -18,6 +18,8 @@ import { getPathName } from "../../utils/utils";
 import { useAuth } from "../../contexts/AuthContext";
 import Divider from "@mui/material/Divider";
 import { InventoryRounded, ManageAccounts, ReceiptLong, TaskRounded } from "@mui/icons-material";
+import PeopleRounded from "@mui/icons-material/PeopleRounded";
+import AssignmentRounded from "@mui/icons-material/AssignmentRounded";
 
 export default function MenuContent() {
   const mainListItems = [
@@ -28,8 +30,8 @@ export default function MenuContent() {
       icon: <AnalyticsRoundedIcon />,
       path: "/transactions",
     },
-    { text: "Users", icon: <PeopleRoundedIcon />, path: "/users" },
-    { text: "Vouchers", icon: <AssignmentRoundedIcon />, path: "/vouchers" },
+    { text: "Users", icon: <PeopleRounded />, path: "/users" },
+    { text: "Vouchers", icon: <AssignmentRounded />, path: "/vouchers" },
   ];
 
   const adminListItems = [
