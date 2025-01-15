@@ -37,6 +37,11 @@ export default function MenuContent() {
     },
     { text: "Users", icon: <PeopleRounded />, path: "/users" },
     { text: "Voucher Task", icon: <AssignmentRounded />, path: "/VoucherTask" },
+    {
+      text: "Voucher Approval",
+      icon: <AssignmentRounded />,
+      path: "/voucherApproval",
+    },
   ];
 
   const adminListItems = [
