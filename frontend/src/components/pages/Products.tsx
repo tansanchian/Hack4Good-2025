@@ -34,7 +34,7 @@ const ProductData: ProductDataType[] = [
   },
 ];
 
-export default function Home2() {
+export default function Products() {
   return (
     <div>
       <Row>
@@ -45,7 +45,7 @@ export default function Home2() {
               title={item.title}
               color={item.btnbg}
               href="#"
-              style={{ height: '300px' }}
+              style={{ height: "300px" }}
             />
           </Col>
         ))}
