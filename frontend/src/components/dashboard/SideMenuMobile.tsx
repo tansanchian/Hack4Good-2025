@@ -11,6 +11,7 @@ import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuButton from './MenuButton';
 import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface SideMenuMobileProps {
   open: boolean | undefined;
@@ -18,6 +19,13 @@ interface SideMenuMobileProps {
 }
 
 export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobileProps) {
+
+  const { auth, logout } = useAuth();
+
+  function handleLogoutClick() {
+    logout();
+  }
+
   return (
     <Drawer
       anchor="right"
@@ -44,12 +52,12 @@ export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobilePro
           >
             <Avatar
               sizes="small"
-              alt="Riley Carter"
+              alt={ auth.username }
               src="/static/images/avatar/7.jpg"
               sx={{ width: 24, height: 24 }}
             />
             <Typography component="p" variant="h6">
-              Riley Carter
+              { auth.username }
             </Typography>
           </Stack>
           <MenuButton showBadge>
@@ -63,7 +71,7 @@ export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobilePro
         </Stack>
         <CardAlert />
         <Stack sx={{ p: 2 }}>
-          <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
+          <Button onClick={handleLogoutClick} variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
             Logout
           </Button>
         </Stack>
