@@ -17,6 +17,7 @@ import ForgotPasswordDialog from './ForgotPasswordDialog';
 import AppTheme from '../../shared-theme/AppTheme';
 import ColorModeSelect from '../../shared-theme/ColorModeSelect';
 import Logo from '../Logo';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -67,6 +68,8 @@ export default function LoginPage(props: { disableCustomTheme?: boolean }) {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
 
+  const { auth, login } = useAuth();
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -113,6 +116,16 @@ export default function LoginPage(props: { disableCustomTheme?: boolean }) {
 
     return isValid;
   };
+
+  const handleLoginClick = () => {
+    const isValid = validateInputs();
+    const email = document.getElementById('email') as HTMLInputElement;
+
+    // proceed with login
+    if (isValid) {
+      login("", "123", "", email.value, (email.value === "admin@admin.com"));
+    }
+  }
 
   return (
     <AppTheme {...props}>
@@ -173,16 +186,16 @@ export default function LoginPage(props: { disableCustomTheme?: boolean }) {
                 color={passwordError ? 'error' : 'primary'}
               />
             </FormControl>
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
             <ForgotPasswordDialog open={open} handleClose={handleClose} />
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              onClick={validateInputs}
+              onClick={handleLoginClick}
             >
               Sign in
             </Button>
