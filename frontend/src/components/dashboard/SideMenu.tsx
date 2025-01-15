@@ -11,6 +11,7 @@ import MenuContent from "./MenuContent";
 import CardAlert from "./CardAlert";
 import OptionsMenu from "./OptionsMenu";
 import Logo from "../Logo";
+import { useAuth } from "../../contexts/AuthContext";
 
 const drawerWidth = 240;
 
@@ -26,6 +27,9 @@ const Drawer = styled(MuiDrawer)({
 });
 
 export default function SideMenu() {
+
+  const { auth } = useAuth();
+
   return (
     <Drawer
       variant="permanent"
@@ -61,7 +65,7 @@ export default function SideMenu() {
       >
         <Avatar
           sizes="small"
-          alt="Riley Carter"
+          alt={ auth.username }
           src="/static/images/avatar/7.jpg"
           sx={{ width: 36, height: 36 }}
         />
@@ -70,10 +74,10 @@ export default function SideMenu() {
             variant="body2"
             sx={{ fontWeight: 500, lineHeight: "16px" }}
           >
-            Riley Carter
+            { auth.username }
           </Typography>
           <Typography variant="caption" sx={{ color: "text.secondary" }}>
-            riley@email.com
+            { auth.email }         
           </Typography>
         </Box>
         <OptionsMenu />
