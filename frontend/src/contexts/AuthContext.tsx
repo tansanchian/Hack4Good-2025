@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { getUserById, sendLogoutRequest } from '../api/user';
 
 // authentication state
 interface AuthState {
@@ -53,25 +54,25 @@ export const AuthProvider = ({ children } : { children: React.ReactNode }) => {
   // wait until backend user authentication functionality is implemented
 
   const checkAuth = async () => {
-    // try {
-    //   const response = await getUserById(auth.id);
-    //   if (response.status !== 200) {
-    //     _logout();
-    //   } else {
-    //     const newAuthState = { 
-    //       isLoggedIn: true,
-    //       isAdmin: response.data.isAdmin,
-    //       id: auth.id,
-    //       token: response.data.token,
-    //       username: response.data.username,
-    //       email: response.data.email
-    //     };
-    //     setAuth(newAuthState);
-    //     saveAuthState(newAuthState);
-    //   }
-    // } catch (err : any) {
-    //   _logout();
-    // }
+    try {
+      const response = await getUserById(auth.id);
+      if (response.status !== 200) {
+        _logout();
+      } else {
+        const newAuthState = { 
+          isLoggedIn: true,
+          isAdmin: response.data.isAdmin,
+          id: auth.id,
+          token: response.data.token,
+          username: response.data.username,
+          email: response.data.email
+        };
+        setAuth(newAuthState);
+        saveAuthState(newAuthState);
+      }
+    } catch (err : any) {
+      _logout();
+    }
   }
 
   const login = (token : string, id : string, username: string, email: string, isAdmin: boolean = false) => {
@@ -82,10 +83,8 @@ export const AuthProvider = ({ children } : { children: React.ReactNode }) => {
   };
 
   const logout = async () => {
-    // wait until backend logout functionality is implemented
-
-    // const response = await sendLogoutRequest();
-    // console.log(response);
+    const response = await sendLogoutRequest();
+    console.log(response);
 
     _logout();
   };

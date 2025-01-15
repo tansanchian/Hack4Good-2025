@@ -16,6 +16,9 @@ import { styled } from '@mui/material/styles';
 import AppTheme from '../../shared-theme/AppTheme';
 import ColorModeSelect from '../../shared-theme/ColorModeSelect';
 import Logo from '../Logo';
+import { sendLoginRequest, sendSignupRequest } from '../../api/user';
+import { useNavigate } from 'react-router';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -67,6 +70,9 @@ export default function SignupPage(props: { disableCustomTheme?: boolean }) {
   const [nameError, setNameError] = React.useState(false);
   const [nameErrorMessage, setNameErrorMessage] = React.useState('');
 
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
   const validateInputs = () => {
     const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
@@ -104,19 +110,41 @@ export default function SignupPage(props: { disableCustomTheme?: boolean }) {
     return isValid;
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (nameError || emailError || passwordError) {
-      event.preventDefault();
-      return;
+  const handleSignupClick = () => {
+    const isValid = validateInputs();
+    
+    if (isValid) {
+    const email = document.getElementById('email') as HTMLInputElement;
+    const password = document.getElementById('password') as HTMLInputElement;
+    const name = document.getElementById('name') as HTMLInputElement;
+
+    sendSignupRequest(name.value, email.value, password.value) // TODO: captcha logic (after captcha logic is implemented in the backend)
+      .then(response => {
+        const message = response.message;
+        const isSuccess = response.status === 201;
+        if (isSuccess) {
+          // log user in
+          sendLoginRequest(email.value, password.value, "").then(response => {
+            const isLoginSuccess = response.status === 200;
+            const isAdmin = response.userInfo?.isAdmin;
+            const id = response.userInfo?.id;
+            const email = response.userInfo?.email;
+            const username = response.userInfo?.username;
+            const token = response.userInfo?.token;
+            if(isLoginSuccess) {
+                login(token, id, username, email, isAdmin);
+                navigate("/");
+            } else {
+                navigate("/login");
+            }
+          });
+        } else {
+          setPasswordError(true);
+          setPasswordErrorMessage(message);
+        }
+      });
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+  }
 
   return (
     <AppTheme {...props}>
@@ -134,7 +162,7 @@ export default function SignupPage(props: { disableCustomTheme?: boolean }) {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={evt => {evt.preventDefault();}}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
             <FormControl>
@@ -186,7 +214,7 @@ export default function SignupPage(props: { disableCustomTheme?: boolean }) {
               type="submit"
               fullWidth
               variant="contained"
-              onClick={validateInputs}
+              onClick={handleSignupClick}
             >
               Sign up
             </Button>

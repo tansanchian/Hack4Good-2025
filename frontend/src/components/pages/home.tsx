@@ -12,6 +12,7 @@ import {
   Divider,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface CartItem {
   id: number;
@@ -84,6 +85,8 @@ const CartItemComponent: React.FC<CartItemProps> = ({
 };
 
 const Home: React.FC = () => {
+  const { auth } = useAuth();
+
   const [cartItems, setCartItems] = useState<CartItem[]>([
     {
       id: 1,
@@ -137,7 +140,7 @@ const Home: React.FC = () => {
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Hi Tan San Chian,
+        Hi { auth.username },
       </Typography>
       <Card>
         <Typography variant="h6" padding={2}>
