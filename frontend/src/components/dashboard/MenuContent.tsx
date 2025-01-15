@@ -17,7 +17,12 @@ import { useEffect } from "react";
 import { getPathName } from "../../utils/utils";
 import { useAuth } from "../../contexts/AuthContext";
 import Divider from "@mui/material/Divider";
-import { InventoryRounded, ManageAccounts, ReceiptLong, TaskRounded } from "@mui/icons-material";
+import {
+  InventoryRounded,
+  ManageAccounts,
+  ReceiptLong,
+  TaskRounded,
+} from "@mui/icons-material";
 import PeopleRounded from "@mui/icons-material/PeopleRounded";
 import AssignmentRounded from "@mui/icons-material/AssignmentRounded";
 
@@ -31,12 +36,16 @@ export default function MenuContent() {
       path: "/transactions",
     },
     { text: "Users", icon: <PeopleRounded />, path: "/users" },
-    { text: "Vouchers", icon: <AssignmentRounded />, path: "/vouchers" },
+    { text: "Voucher Task", icon: <AssignmentRounded />, path: "/VoucherTask" },
   ];
 
   const adminListItems = [
     { text: "Manage Users", icon: <ManageAccounts />, path: "/manage-users" },
-    { text: "Manage Requests", icon: <ReceiptLong />, path: "/manage-requests" },
+    {
+      text: "Manage Requests",
+      icon: <ReceiptLong />,
+      path: "/manage-requests",
+    },
     { text: "Inventory", icon: <InventoryRounded />, path: "/inventory" },
     { text: "Manage Voucher Tasks", icon: <TaskRounded />, path: "/tasks" },
   ];
@@ -51,7 +60,7 @@ export default function MenuContent() {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   useEffect(() => {
-    let index : number = 0;
+    let index: number = 0;
 
     // path (may include / at the end)
     const path = getPathName();
@@ -59,7 +68,11 @@ export default function MenuContent() {
     for (index = 0; index < mainListItems.length; index++) {
       if (path === mainListItems[index].path) break;
     }
-    for (index = mainListItems.length; index < mainListItems.length + adminListItems.length; index++) {
+    for (
+      index = mainListItems.length;
+      index < mainListItems.length + adminListItems.length;
+      index++
+    ) {
       if (path === adminListItems[index - mainListItems.length].path) break;
     }
     setSelectedIndex(index);
@@ -85,26 +98,30 @@ export default function MenuContent() {
             </ListItemButton>
           </ListItem>
         ))}
-        { 
-          auth.isAdmin ? 
-            <Divider sx={{ my: 1.3 }} />
-          : <></>
-        }
-        { auth.isAdmin ?
+        {auth.isAdmin ? <Divider sx={{ my: 1.3 }} /> : <></>}
+        {auth.isAdmin ? (
           adminListItems.map((item, index) => (
-            <ListItem key={index + mainListItems.length} disablePadding sx={{ display: "block" }}>
+            <ListItem
+              key={index + mainListItems.length}
+              disablePadding
+              sx={{ display: "block" }}
+            >
               <ListItemButton
                 component={Link}
                 to={item.path}
-                selected={selectedIndex === (index + mainListItems.length)}
-                onClick={() => handleListItemClick(index + mainListItems.length)}
+                selected={selectedIndex === index + mainListItems.length}
+                onClick={() =>
+                  handleListItemClick(index + mainListItems.length)
+                }
               >
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
               </ListItemButton>
             </ListItem>
-          )) : <></>
-        }
+          ))
+        ) : (
+          <></>
+        )}
       </List>
 
       <List dense>
