@@ -5,7 +5,7 @@ import { IconButton } from "@mui/material";
 import { DataGrid, GridRowClassNameParams, GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import UpdateUser from "../updateUser";
+import UpdateUser from "../UpdateUser";
 
 interface UserRow {
   id: number;
