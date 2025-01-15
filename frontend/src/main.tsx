@@ -9,6 +9,7 @@ import Home1 from "./components/pages/home1";
 import Home2 from "./components/pages/home2";
 import Home3 from "./components/pages/home3";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import HomeAdmin from "./components/pages/homeAdmin";
 
 const root = document.getElementById("root");
 
@@ -114,6 +115,30 @@ ReactDOM.createRoot(root!).render(
           <Route path="products" element={<Home1 />} />
           <Route path="vouchers" element={<Home2 />} />
           <Route path="history" element={<Home3 />} />
+          <Route path="manage-users" element={
+            <AdminRoute
+              adminRoute={<HomeAdmin />}
+              nonAdminRoute={<Navigate to="/" />}
+            />
+          } />
+          <Route path="manage-requests" element={
+            <AdminRoute
+              adminRoute={<HomeAdmin />}
+              nonAdminRoute={<Navigate to="/" />}
+            />
+          } />
+          <Route path="inventory" element={
+            <AdminRoute
+              adminRoute={<HomeAdmin />}
+              nonAdminRoute={<Navigate to="/" />}
+            />
+          } />
+          <Route path="tasks" element={
+            <AdminRoute
+              adminRoute={<HomeAdmin />}
+              nonAdminRoute={<Navigate to="/" />}
+            />
+          } />
         </Route>
       </Routes>
     </BrowserRouter>
