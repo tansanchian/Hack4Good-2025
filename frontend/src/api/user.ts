@@ -166,16 +166,13 @@ async function resetPassword(token : string, password: string) {
 }
 
 /**
- * An async function that updates the currently logged in user's username and email.
+ * An async function that updates a user's details.
  */
-async function updateAccount(username : string, email : string) {
-  const updateAccountData = {
-    username : username,
-    email : email,
-  };
+async function updateAccount(details: { id: string, username : string, email : string, phoneNumber : string, gender: string, isActive: boolean }) {
+  const updateAccountData = details;
   try {
     const response = await api.patch(USERS_BASE_URL + UPDATE_ACCOUNT_API, updateAccountData);
-    console.log("Successfully updated account with the following details:\nUsername:", username, "\nEmail:", email);
+    console.log("Successfully updated account!");
     return {status: response.status, message: response.data.message};
   } catch (error: any) {
     console.error("Error when updating account", error);

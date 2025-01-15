@@ -201,12 +201,11 @@ export async function getAllUsers(req: Request, res: Response) {
  * - 500: Server error.
  */
 export const updateUser = async (req: Request, res: Response) => {
-  const { username, email, currentPassword, newPassword } = req.body;
-  const userId = req.user._id;
+  const { id, username, email, phoneNumber, gender, voucher, isActive, currentPassword, newPassword } = req.body;
 
   try {
     // Retrieve user from database
-    let user = await User.findById(userId);
+    let user = await User.findById(id);
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
@@ -259,6 +258,10 @@ export const updateUser = async (req: Request, res: Response) => {
 
     user.email = email || user.email;
     user.username = username || user.username;
+    user.phoneNumber = phoneNumber || user.phoneNumber;
+    user.gender = gender || user.gender;
+    user.voucher = voucher || user.voucher;
+    user.isActive = isActive || user.isActive;
 
     // Save updated user
     user = await user.save();

@@ -6,11 +6,11 @@ import { DataGrid, GridRowClassNameParams, GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UpdateUser from "../UpdateUser";
-import { getUsers } from "../../api/user";
+import { deleteAccount, getUsers, updateAccount, updateUserPrivilege } from "../../api/user";
 import { useAuth } from "../../contexts/AuthContext";
 
 interface UserRow {
-  id: number;
+  id: string;
   name: string;
   email: string;
   voucher: string;
@@ -50,15 +50,52 @@ const Users: React.FC = () => {
   const handleUpdateUserInfo = (updatedUser: UserRow) => {
     handleCloseUpdate();
     setSelectedUser(updatedUser);
+
+    // update admin privileges of user in backend
+    updateUserPrivilege(
+      updatedUser.id,
+      updatedUser.admin
+    ).then(response => {
+      if (response.status === 200) {
+        console.log("User permissions change successful");
+      } else {
+        console.error("User permissions change failed: ", response.message);
+      }
+    });
+
+    // update user in backend
+    updateAccount({
+      id: updatedUser.id,
+      username: updatedUser.name,
+      email: updatedUser.email,
+      phoneNumber: updatedUser.phonenumber,
+      gender: updatedUser.sex,
+      isActive: updatedUser.active
+    }).then(response => {
+      if (response.status === 200) {
+        console.log("User update successful");
+      } else {
+        console.error("User update failed: ", response.message);
+      }
+    });
   };
 
-  const handleClickOpenDelete = (email: string) => {
-    console.log("Delete user with email:", email);
+  const handleClickOpenDelete = (id: string) => {
+    console.log("Delete user with id:", id);
+
+    deleteAccount(id).then(response => {
+      if (response.status === 200) {
+        console.log("Deletion successful");
+      } else {
+        console.error("Deletion failed");
+      }
+      updateRows();
+    })
   };
 
   const DEFAULT_ROWS: UserRow[] = [
     {
-      id: 1,
+      id: "1",
       name: "John Doe",
       email: "john.doe@example.com",
       voucher: "ABC123",
@@ -68,7 +105,7 @@ const Users: React.FC = () => {
       active: true,
     },
     {
-      id: 2,
+      id: "2",
       name: "Jane Smith",
       email: "jane.smith@example.com",
       voucher: "XYZ456",
@@ -78,7 +115,7 @@ const Users: React.FC = () => {
       active: true,
     },
     {
-      id: 3,
+      id: "3",
       name: "Alice Johnson",
       email: "alice.johnson@example.com",
       voucher: "LMN789",
@@ -88,7 +125,7 @@ const Users: React.FC = () => {
       active: true,
     },
     {
-      id: 4,
+      id: "4",
       name: "Bob Brown",
       email: "bob.brown@example.com",
       voucher: "OPQ012",
@@ -139,7 +176,7 @@ const Users: React.FC = () => {
               borderRadius: "50%",
             }}
             aria-label="delete"
-            onClick={() => handleClickOpenDelete((params.row as UserRow).email)}
+            onClick={() => handleClickOpenDelete((params.row as UserRow).id)}
           >
             <DeleteIcon fontSize="small" sx={{ color: "red" }} />
           </IconButton>
@@ -148,8 +185,7 @@ const Users: React.FC = () => {
     },
   ];
 
-  // get users from database
-  useEffect(() => {
+  const updateRows = () => {
     getUsers().then(response => {
       if (response.status === 200) {
         setRows(response.data.map((row : any) => {
@@ -158,7 +194,7 @@ const Users: React.FC = () => {
             name: row.username,
             email: row.email,
             voucher: row.voucher,
-            phonenumber: row.phonenumber,
+            phonenumber: row.phoneNumber,
             sex: row.gender,
             admin: row.isAdmin,
             active: true,
@@ -169,7 +205,10 @@ const Users: React.FC = () => {
         setRows(DEFAULT_ROWS);
       }
     })
-  }, []);
+  }
+
+  // get users from database
+  useEffect(updateRows, [openUpdate]);
 
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>

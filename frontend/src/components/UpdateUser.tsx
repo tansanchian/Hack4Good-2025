@@ -16,7 +16,7 @@ import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid2";
 
 interface UserRow {
-  id: number;
+  id: string;
   name: string;
   email: string;
   voucher: string;
@@ -34,7 +34,7 @@ interface UpdateUserProps {
 }
 
 interface FormData {
-  id: number;
+  id: string;
   name: string;
   email: string;
   voucher: string;
@@ -74,6 +74,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
     event.preventDefault();
     if (validateInputs()) {
       handleUpdateUserInfo(formData as UserRow);
+      handleClose();
     }
   };
 
@@ -266,7 +267,7 @@ UpdateUser.propTypes = {
   handleUpdateUserInfo: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   selectedUser: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
     voucher: PropTypes.string.isRequired,
