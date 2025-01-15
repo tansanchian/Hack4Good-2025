@@ -1,20 +1,43 @@
-import express, { Request, Response } from "express";
+// External libraries
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import express, { Application, Request, Response } from 'express';
 
-import connectMongoDB from "./connectDB";
+// Internal project modules
+import connectMongoDB from './connectDB';
+import { PORT } from './config';
+import authenticationRoute from './routes/authenticationRoute';
+import userRoute from './routes/userRoute';
 
-const app = express();
-const port = 3000;
+// Initialize Express Application
+const app: Application = express();
+const port: string | number  = PORT;
 
-// Middleware for parsing JSON
-app.use(express.json());
+// Test Route
+app.get('/', (req: Request, res: Response) => {
+    res.send({
+        message: "Test root"
+    })
+})
 
-// Basic route
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello, TypeScript with Express!");
-});
+// CORS Configuration
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    credentials: true // allow for sending JWT cookies
+}
 
-// Start the server
+// Middleware Setup
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
+app.use(cors(corsOptions))
+app.use(cookieParser());
+
+// Route Handlers
+app.use('/authentication', authenticationRoute)
+app.use('/users', userRoute);
+
+// Start Server and Connect to Database
 app.listen(port, () => {
-  connectMongoDB();
-  console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on port ${PORT}`);
+    connectMongoDB();
 });
