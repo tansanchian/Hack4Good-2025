@@ -8,31 +8,43 @@ import bg4 from "../../assets/bg4.jpg";
 interface ProductDataType {
   image: string;
   title: string;
-  btnbg: string;
+  subtitle: string;
+  price: string;
+  description: string;
 }
 
 const ProductData: ProductDataType[] = [
   {
     image: bg1,
-    title: "This is an apple",
-    btnbg: "primary",
+    title: "apple",
+    subtitle: "Fresh and juicy",
+    price: "$2.99",
+    description: "Our apples are fresh, organic, and sourced from local farms. Perfect for a healthy snack!",
   },
   {
     image: bg2,
-    title: "Lets be simple blog",
-    btnbg: "primary",
+    title: "banana",
+    subtitle: "Sweet and healthy",
+    price: "$1.49",
+    description: "Enjoy the sweetness of our bananas, rich in potassium and great for a quick energy boost.",
   },
   {
     image: bg3,
-    title: "Don't Lamp blog",
-    btnbg: "primary",
+    title: "orange",
+    subtitle: "Full of vitamin C",
+    price: "$3.19",
+    description: "Our oranges are bursting with flavor and packed with Vitamin C to keep you refreshed.",
   },
   {
     image: bg4,
-    title: "Simple is beautiful",
-    btnbg: "primary",
+    title: "grape",
+    subtitle: "Seedless and fresh",
+    price: "$4.50",
+    description: "Juicy, seedless grapes that are perfect for snacking or adding to your favorite salads.",
   },
 ];
+
+
 
 export default function Home2() {
   return (
@@ -43,9 +55,9 @@ export default function Home2() {
             <Product
               image={item.image}
               title={item.title}
-              color={item.btnbg}
-              href="#"
-              style={{ height: '300px' }}
+              subtitle={item.subtitle}
+              price={item.price}
+              description={item.description}
             />
           </Col>
         ))}
