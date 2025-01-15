@@ -1,6 +1,5 @@
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
-import App from "./App";
 import LoginPage from "./components/login/LoginPage";
 import SignupPage from "./components/signup/SignupPage";
 import Dashboard from "./Dashboard";
@@ -11,7 +10,8 @@ import Transactions from "./components/pages/Transactions";
 import VoucherTask from "./components/pages/VoucherTask";
 import VoucherApprovalReject from "./components/pages/VoucherApprovalReject";
 import Users from "./components/pages/Users";
-import "bootstrap/dist/css/bootstrap.min.css";
+import Tasks from "./components/pages/Tasks";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const root = document.getElementById("root");
 
@@ -148,7 +148,7 @@ ReactDOM.createRoot(root!).render(
             path="tasks"
             element={
               <AdminRoute
-                adminRoute={<Home />}
+                adminRoute={<Tasks />}
                 nonAdminRoute={<Navigate to="/" />}
               />
             }

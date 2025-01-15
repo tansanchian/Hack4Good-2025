@@ -1,46 +1,31 @@
 import React, { useState } from "react";
-import {
-  Card,
-  CardBody,
-  CardImg,
-  CardTitle,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  Button,
-} from "reactstrap";
+import { Card, CardBody, CardTitle, Modal, ModalHeader, ModalBody, Button } from "reactstrap";
 
-interface ProductProps {
-  image: string;
+interface TaskProps {
   title: string;
   subtitle: string;
-  price: string;
-  description: string; // Add description
-  href?: string;
+  description: string;
 }
 
-const Product: React.FC<ProductProps> = ({
-  image,
-  title,
-  subtitle,
-  price,
-  description,
-}) => {
+const Task: React.FC<TaskProps> = ({ title, subtitle, description }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const toggleModal = () => setModalOpen(!modalOpen);
 
   return (
     <>
-      {/* Main Product Card */}
+      {/* Main Task Card */}
       <Card
         style={{
           cursor: "pointer",
           border: "1px solid #eee",
           borderRadius: "8px",
           boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-          marginBottom: "16px",
-          transition: "transform 0.2s ease, boxShadow 0.2s ease",
+          marginBottom: "8px",
+          height: "80px",
+          display: "flex",
+          alignItems: "flex-start",
+          padding: "20px",
         }}
         onClick={toggleModal}
         onMouseEnter={(e: React.MouseEvent) => {
@@ -54,21 +39,18 @@ const Product: React.FC<ProductProps> = ({
           target.style.boxShadow = "0 2px 4px rgba(0,0,0,0.1)";
         }}
       >
-        <CardImg
-          top
-          src={image}
-          alt={title}
+        <CardBody
           style={{
-            height: "150px",
-            width: "100%",
-            objectFit: "cover",
+            padding: "0",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
           }}
-        />
-        <CardBody>
-          <CardTitle tag="h5">
-            {title} <span style={{ color: "#007bff", fontSize: "14px" }}>{price}</span>
+        >
+          <CardTitle tag="h5" style={{ marginBottom: "4px", fontSize: "16px" }}>
+            {title}
           </CardTitle>
-          <p style={{ fontSize: "14px", color: "#666" }}>{subtitle}</p>
+          <p style={{ fontSize: "14px", color: "#666", marginBottom: "0" }}>{subtitle}</p>
         </CardBody>
       </Card>
 
@@ -76,27 +58,16 @@ const Product: React.FC<ProductProps> = ({
       <Modal isOpen={modalOpen} toggle={toggleModal} centered>
         <ModalHeader toggle={toggleModal}>{title}</ModalHeader>
         <ModalBody>
-          <CardImg
-            top
-            src={image}
-            alt={title}
-            style={{
-              height: "200px",
-              width: "100%",
-              objectFit: "cover",
-              marginBottom: "16px",
-            }}
-          />
-          <p style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "8px" }}>
-            Price: {price}
-          </p>
           <p style={{ fontSize: "14px", color: "#666" }}>{description}</p>
           <Button
             color="primary"
             style={{ marginTop: "16px", display: "block", width: "100%" }}
-            onClick={toggleModal}
+            onClick={() => {
+              toggleModal();
+              alert(`Task "${title}" accepted!`);
+            }}
           >
-            Add to Cart
+            Accept Task
           </Button>
         </ModalBody>
       </Modal>
@@ -104,4 +75,5 @@ const Product: React.FC<ProductProps> = ({
   );
 };
 
-export default Product;
+export default Task;
+
