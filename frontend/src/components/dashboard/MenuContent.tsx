@@ -23,8 +23,13 @@ export default function MenuContent() {
   const mainListItems = [
     { text: "Home", icon: <HomeRoundedIcon />, path: "/" },
     { text: "Products", icon: <ShoppingCart />, path: "/products" },
-    { text: "Vouchers", icon: <AnalyticsRoundedIcon />, path: "/vouchers" },
-    { text: "Transaction History", icon: <HistoryRounded />, path: "/history" },
+    {
+      text: "Transactions",
+      icon: <AnalyticsRoundedIcon />,
+      path: "/transactions",
+    },
+    { text: "Users", icon: <PeopleRoundedIcon />, path: "/users" },
+    { text: "Vouchers", icon: <AssignmentRoundedIcon />, path: "/vouchers" },
   ];
 
   const adminListItems = [

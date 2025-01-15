@@ -10,6 +10,9 @@ import Home2 from "./components/pages/home2";
 import Home3 from "./components/pages/home3";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import HomeAdmin from "./components/pages/homeAdmin";
+import Transactions from "./components/pages/transactions";
+import Vouchers from "./components/pages/vouchers";
+import Users from "./components/pages/users";
 
 const root = document.getElementById("root");
 
@@ -113,8 +116,9 @@ ReactDOM.createRoot(root!).render(
         }>
           <Route index element={<Home />} />
           <Route path="products" element={<Home1 />} />
-          <Route path="vouchers" element={<Home2 />} />
-          <Route path="history" element={<Home3 />} />
+          <Route path="transactions" element={<Transactions />} />
+          <Route path="vouchers" element={<Vouchers />} />
+          <Route path="users" element={<Users />} />
           <Route path="manage-users" element={
             <AdminRoute
               adminRoute={<HomeAdmin />}
