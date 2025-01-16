@@ -12,7 +12,7 @@ interface ProductDataType {
   subtitle: string;
   price: string;
   description: string;
-  quantity: string;
+  quantity: number;
 }
 
 const ProductData: ProductDataType[] = [
@@ -23,7 +23,7 @@ const ProductData: ProductDataType[] = [
     price: "$2.99",
     description:
       "Our apples are fresh, organic, and sourced from local farms. Perfect for a healthy snack!",
-    quantity: "50",
+    quantity: 50,
   },
   {
     image: bg2,
@@ -32,7 +32,7 @@ const ProductData: ProductDataType[] = [
     price: "$1.49",
     description:
       "Enjoy the sweetness of our bananas, rich in potassium and great for a quick energy boost.",
-    quantity: "50",
+    quantity: 50,
   },
   {
     image: bg3,
@@ -41,7 +41,7 @@ const ProductData: ProductDataType[] = [
     price: "$3.19",
     description:
       "Our oranges are bursting with flavor and packed with Vitamin C to keep you refreshed.",
-    quantity: "50",
+    quantity: 50,
   },
   {
     image: bg4,
@@ -50,7 +50,7 @@ const ProductData: ProductDataType[] = [
     price: "$4.50",
     description:
       "Juicy, seedless grapes that are perfect for snacking or adding to your favorite salads.",
-    quantity: "50",
+    quantity: 0,
   },
 ];
 
@@ -70,6 +70,7 @@ export default function Products() {
               subtitle={item.subtitle}
               price={item.price}
               description={item.description}
+              quantity={item.quantity}
             />
           </Col>
         ))}
