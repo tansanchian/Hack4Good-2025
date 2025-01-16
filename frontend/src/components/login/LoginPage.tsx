@@ -1,23 +1,25 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
-import CssBaseline from "@mui/material/CssBaseline";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Divider from "@mui/material/Divider";
-import FormLabel from "@mui/material/FormLabel";
-import FormControl from "@mui/material/FormControl";
-import Link from "@mui/material/Link";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import MuiCard from "@mui/material/Card";
-import { styled } from "@mui/material/styles";
-import ForgotPasswordDialog from "./ForgotPasswordDialog";
-import AppTheme from "../../shared-theme/AppTheme";
-import ColorModeSelect from "../../shared-theme/ColorModeSelect";
-import Logo from "../Logo";
-import { useAuth } from "../../contexts/AuthContext";
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import CssBaseline from '@mui/material/CssBaseline';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Divider from '@mui/material/Divider';
+import FormLabel from '@mui/material/FormLabel';
+import FormControl from '@mui/material/FormControl';
+import Link from '@mui/material/Link';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import MuiCard from '@mui/material/Card';
+import { styled } from '@mui/material/styles';
+import ForgotPasswordDialog from './ForgotPasswordDialog';
+import AppTheme from '../../shared-theme/AppTheme';
+import ColorModeSelect from '../../shared-theme/ColorModeSelect';
+import Logo from '../Logo';
+import { useAuth } from '../../contexts/AuthContext';
+import { sendLoginRequest } from '../../api/user';
+import { useNavigate } from 'react-router';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -68,7 +70,8 @@ export default function LoginPage(props: { disableCustomTheme?: boolean }) {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
 
-  const { auth, login } = useAuth();
+  const { auth, login } = useAuth();    
+  const navigate = useNavigate();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -76,18 +79,6 @@ export default function LoginPage(props: { disableCustomTheme?: boolean }) {
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
-      return;
-    }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
   };
 
   const validateInputs = () => {
@@ -119,11 +110,29 @@ export default function LoginPage(props: { disableCustomTheme?: boolean }) {
 
   const handleLoginClick = () => {
     const isValid = validateInputs();
-    const email = document.getElementById("email") as HTMLInputElement;
+    const email = document.getElementById('email') as HTMLInputElement;
+    const password = document.getElementById('password') as HTMLInputElement;
 
     // proceed with login
     if (isValid) {
-      login("", "123", "", email.value, email.value === "admin@admin.com");
+      sendLoginRequest(email.value, password.value, "").then(response => {
+        const message = response.message;
+        const isSuccess = response.status === 200;
+        const isAdmin = response.userInfo?.isAdmin;
+        const id = response.userInfo?.id;
+        const username = response.userInfo?.username;
+        const token = response.userInfo?.token;
+        if(isSuccess) {
+          console.log(message);
+          login(token, id, username, email.value, isAdmin);
+          navigate("/");
+        } else {
+          setPasswordError(true);
+          setPasswordErrorMessage(message);
+        }
+      }).catch(error => {
+        console.error("An error occurred when logging in: " + error);
+      });
     }
   };
 
@@ -145,7 +154,7 @@ export default function LoginPage(props: { disableCustomTheme?: boolean }) {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={evt => {evt.preventDefault();}}
             noValidate
             sx={{
               display: "flex",
