@@ -15,6 +15,7 @@ interface CartItem {
   id: number;
   name: string;
   description: string;
+  photoUrl: string;
   price: number;
   quantity: number;
   selected: boolean;
@@ -31,12 +32,27 @@ const CartItemComponent: React.FC<CartItemProps> = ({ item, onDelete }) => {
     <Paper elevation={2} style={{ padding: "16px", marginBottom: "16px" }}>
       <Grid2 container spacing={2} alignItems="center">
         <Grid2 size={{ xs: 4 }}>
-          <Typography variant="body1" fontWeight="bold">
-            {item.name}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            {item.description}
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
+            <img
+              src={item.photoUrl}
+              alt={`${item.name}'s submission`}
+              style={{ width: 80, height: 80 }}
+            />
+            <Grid2
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+              }}
+            >
+              <Typography variant="body1" fontWeight="bold">
+                {item.name}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                {item.description}
+              </Typography>
+            </Grid2>
+          </Box>
         </Grid2>
         <Grid2 size={{ xs: 2 }}>
           <Typography variant="body1" color="primary">
@@ -76,6 +92,8 @@ const Transactions: React.FC = () => {
       id: 1,
       name: "SKIN1004 Madagascar Centella Hyalu-Cica Water-Fit Sun Serum",
       description: "SPF50+ PA++++",
+      photoUrl:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
       price: 15.99,
       quantity: 1,
       selected: false,
@@ -85,6 +103,8 @@ const Transactions: React.FC = () => {
       id: 3,
       name: "SKIN1004 Madagascar Centella Hyalu-Cica Water-Fit Sun Serum",
       description: "SPF50+ PA++++",
+      photoUrl:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
       price: 15.99,
       quantity: 1,
       selected: false,
@@ -94,6 +114,8 @@ const Transactions: React.FC = () => {
       id: 2,
       name: "COSRX Low pH Good Morning Gel Cleanser",
       description: "150ml",
+      photoUrl:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
       price: 8.0,
       quantity: 5,
       selected: false,

@@ -5,11 +5,11 @@ import { IconButton } from "@mui/material";
 import { DataGrid, GridRowClassNameParams, GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import UpdateUser from "../UpdateUser";
 import { deleteAccount, getUsers, updateAccount, updateUserPrivilege } from "../../api/user";
 import { useAuth } from "../../contexts/AuthContext";
 import { PasswordRounded } from "@mui/icons-material";
 import UpdateUserPassword from "../UpdateUserPassword";
+import UpdateUser from "../dashboard/UpdateUser";
 
 interface UserRow {
   id: string;
