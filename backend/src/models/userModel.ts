@@ -22,6 +22,9 @@ interface IUser extends Document {
     cart: IProduct[]
     tasks: ITask[]
     transactionHistory: ITransaction[]
+    phoneNumber: string
+    gender: string
+    isActive: boolean
 }
 
 /**
@@ -33,7 +36,6 @@ const userSchema = new mongoose.Schema(
         username: {
             type: String,
             required: true,
-            unique: true,
         },
         email: {
             type: String,
@@ -84,7 +86,20 @@ const userSchema = new mongoose.Schema(
             type: [transactionSchema],
             default: [],
             required: false
-        }
+        },
+        phoneNumber: {
+            type: String,
+            required: false
+        },
+        gender: {
+            type: String,
+            required: false
+        },
+        isActive: {
+            type: Boolean,
+            required: true,
+            default: true
+        },
     },
     {
         timestamps: true,

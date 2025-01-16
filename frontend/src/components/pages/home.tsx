@@ -12,14 +12,16 @@ import {
   Divider,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface CartItem {
   id: number;
   name: string;
   description: string;
+  photoUrl: string;
   price: number;
   quantity: number;
-  selected: boolean; // To track if the item is selected
+  selected: boolean;
 }
 
 interface CartItemProps {
@@ -38,19 +40,34 @@ const CartItemComponent: React.FC<CartItemProps> = ({
   return (
     <Paper elevation={2} style={{ padding: "16px", marginBottom: "16px" }}>
       <Grid2 container spacing={2} alignItems="center">
-        <Grid2 size={{ xs: 1 }}>
+        <Grid2 size={{ xs: 0.5 }}>
           <Checkbox
             checked={item.selected}
             onChange={() => onSelect(item.id)}
           />
         </Grid2>
         <Grid2 size={{ xs: 4 }}>
-          <Typography variant="body1" fontWeight="bold">
-            {item.name}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            {item.description}
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "flex-start", gap: 2 }}>
+            <img
+              src={item.photoUrl}
+              alt={`${item.name}'s submission`}
+              style={{ width: 80, height: 80 }}
+            />
+            <Grid2
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+              }}
+            >
+              <Typography variant="body1" fontWeight="bold">
+                {item.name}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                {item.description}
+              </Typography>
+            </Grid2>
+          </Box>
         </Grid2>
         <Grid2 size={{ xs: 2 }}>
           <Typography variant="body1" color="primary">
@@ -84,11 +101,15 @@ const CartItemComponent: React.FC<CartItemProps> = ({
 };
 
 const Home: React.FC = () => {
+  const { auth } = useAuth();
+
   const [cartItems, setCartItems] = useState<CartItem[]>([
     {
       id: 1,
       name: "SKIN1004 Madagascar Centella Hyalu-Cica Water-Fit Sun Serum",
       description: "SPF50+ PA++++",
+      photoUrl:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
       price: 15.99,
       quantity: 1,
       selected: false,
@@ -97,6 +118,8 @@ const Home: React.FC = () => {
       id: 2,
       name: "COSRX Low pH Good Morning Gel Cleanser",
       description: "150ml",
+      photoUrl:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
       price: 8.0,
       quantity: 1,
       selected: false,
@@ -137,19 +160,22 @@ const Home: React.FC = () => {
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Hi Tan San Chian,
+        Hi { auth.username },
       </Typography>
-      <Card>
-        <Typography variant="h6" padding={2}>
-          Voucher Balance: 500 points
-        </Typography>
-      </Card>
+
       <Typography component="h2" variant="h6" sx={{ mb: 1 }}>
         Shopping Cart
       </Typography>
 
-      <Grid2 container spacing={2} style={{ padding: "16px" }}>
-        <Grid2 size={{ xs: 1 }}>
+      <Grid2
+        container
+        spacing={2}
+        style={{
+          padding: "16px",
+          alignItems: "center",
+        }}
+      >
+        <Grid2 size={{ xs: 0.5 }}>
           <Checkbox
             checked={cartItems.every((item) => item.selected)}
             onChange={handleSelectAll}
@@ -194,17 +220,33 @@ const Home: React.FC = () => {
         ))}
       </Box>
 
-      <Paper elevation={3} style={{ padding: "16px", marginTop: "16px" }}>
+      <Paper
+        elevation={3}
+        style={{ padding: "16px", marginTop: "16px", position: "relative" }}
+      >
         <Typography variant="h6">Summary</Typography>
         <Typography variant="body1">Total Price: ${getTotalPrice()}</Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          style={{ marginTop: "16px" }}
+        <Box
+          style={{
+            position: "absolute",
+            bottom: 16,
+            right: 16,
+            display: "flex",
+            gap: "16px",
+            alignItems: "center",
+          }}
         >
-          Check Out
-        </Button>
+          <Typography variant="h6" style={{ marginBottom: "8px" }}>
+            Voucher Balance: 500 points
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ width: "150px" }}
+          >
+            Check Out
+          </Button>
+        </Box>
       </Paper>
     </Box>
   );
