@@ -17,6 +17,7 @@ interface ItemRow {
   category: string;
   quantity: string;
   price: string;
+  preorder: string;
 }
 
 const Inventory: React.FC = () => {
@@ -90,6 +91,12 @@ const Inventory: React.FC = () => {
     },
     { field: "price", headerName: "Price", editable: false, width: 120 },
     {
+      field: "preorder",
+      headerName: "Preorder",
+      editable: false,
+      width: 150,
+    },
+    {
       field: "actions",
       headerName: "Actions",
       width: 100,
@@ -133,6 +140,7 @@ const Inventory: React.FC = () => {
       category: "Tools",
       quantity: "50",
       price: "50",
+      preorder: "0",
     },
     {
       id: "2",
@@ -143,6 +151,7 @@ const Inventory: React.FC = () => {
       category: "Electronics",
       quantity: "30",
       price: "50",
+      preorder: "0",
     },
     {
       id: "3",
@@ -153,6 +162,7 @@ const Inventory: React.FC = () => {
       category: "Appliances",
       quantity: "20",
       price: "50",
+      preorder: "0",
     },
     {
       id: "4",
@@ -163,6 +173,7 @@ const Inventory: React.FC = () => {
       category: "Furniture",
       quantity: "15",
       price: "50",
+      preorder: "0",
     },
     {
       id: "5",
@@ -171,8 +182,9 @@ const Inventory: React.FC = () => {
       photoURL:
         "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
       category: "Hardware",
-      quantity: "60",
+      quantity: "0",
       price: "50",
+      preorder: "10",
     },
   ];
 
