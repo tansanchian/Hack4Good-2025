@@ -171,7 +171,7 @@ export async function getAllUsers(req: Request, res: Response) {
 }
 
 /**
- * Updates the user's profile information, including username, email, and password.
+ * Allows admins to updates the user's profile information, including username, email, and password.
  * 
  * Endpoint: PATCH /users/update
  * 
@@ -201,7 +201,7 @@ export async function getAllUsers(req: Request, res: Response) {
  * - 500: Server error.
  */
 export const updateUser = async (req: Request, res: Response) => {
-  const { id, username, email, phoneNumber, gender, voucher, isActive, currentPassword, newPassword } = req.body;
+  const { id, username, email, phoneNumber, gender, voucher, isActive, newPassword } = req.body;
 
   try {
     // Retrieve user from database
@@ -211,43 +211,40 @@ export const updateUser = async (req: Request, res: Response) => {
       return;
     } 
 
-    // Validate that both currentPassword and newPassword are provided if attempting a password change
-    if ((!newPassword && currentPassword) || (!currentPassword && newPassword)) {
-      res.status(400).json({ message: "Please provide both current password and new password" });
-      return;
-    }
-
-    // Email format validation
-    // Valid: user@example.com, invalid: user@ example.com
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      res.status(400).json({ message: "Invalid email format" });
-      return;
-    }
-
-    // // Check if the new username is already in use by another user
-    // const existingUser = await User.findOne({ username });
-    // if (existingUser && existingUser.username !== user.username) {
-    //   res.status(400).json({ message: "Username is already taken" });
+    // // Validate that both currentPassword and newPassword are provided if attempting a password change
+    // if ((!newPassword && currentPassword) || (!currentPassword && newPassword)) {
+    //   res.status(400).json({ message: "Please provide both current password and new password" });
     //   return;
     // }
 
-    // Check if the new email is already in use by another user
-    const existingEmail = await User.findOne({ email });
-    if (existingEmail && existingEmail.email !== user.email) {
-      res.status(400).json({ message: "Email is already taken" });
-      return;
-    }
-
-    // If updating password, verify the current password and validate the new password
-    if (currentPassword && newPassword) {
-      const isMatch = await bcrypt.compare(currentPassword, user.password);
-      if (!isMatch) {
-        res.status(400).json({ message: "Current password is incorrect" });
+    // Email format validation
+    // Valid: user@example.com, invalid: user@ example.com
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        res.status(400).json({ message: "Invalid email format" });
         return;
       }
-      if (newPassword.length < 10) {
-        res.status(400).json({ message: "Password must be at least 10 characters long" });
+
+      // // Check if the new username is already in use by another user
+      // const existingUser = await User.findOne({ username });
+      // if (existingUser && existingUser.username !== user.username) {
+      //   res.status(400).json({ message: "Username is already taken" });
+      //   return;
+      // }
+
+      // Check if the new email is already in use by another user
+      const existingEmail = await User.findOne({ email });
+      if (existingEmail && existingEmail.email !== user.email) {
+        res.status(400).json({ message: "Email is already taken" });
+        return;
+      }
+    }
+
+    // If updating password, validate the new password
+    if (newPassword) {
+      if (newPassword.length < 8) {
+        res.status(400).json({ message: "Password must be at least 8 characters long" });
         return;
       }
 
@@ -261,7 +258,10 @@ export const updateUser = async (req: Request, res: Response) => {
     user.phoneNumber = phoneNumber || user.phoneNumber;
     user.gender = gender || user.gender;
     user.voucher = voucher || user.voucher;
-    user.isActive = isActive || user.isActive;
+
+    if (isActive !== null && isActive !== undefined) {
+      user.isActive = (isActive !== 0);
+    }
 
     // Save updated user
     user = await user.save();

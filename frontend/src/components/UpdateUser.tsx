@@ -23,7 +23,7 @@ interface UserRow {
   sex: string;
   admin: boolean;
   phonenumber: string;
-  active: boolean;
+  isActive: boolean;
 }
 
 interface UpdateUserProps {
@@ -41,7 +41,7 @@ interface FormData {
   sex: string;
   admin: boolean;
   phonenumber: string;
-  active: boolean;
+  isActive: boolean;
 }
 
 interface ErrorState {
@@ -62,10 +62,12 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
     admin: { error: false, message: "" },
     sex: { error: false, message: "" },
     phonenumber: { error: false, message: "" },
+    isActive: { error: false, message: "" },
   });
 
   useEffect(() => {
     if (selectedUser) {
+      console.log(selectedUser);
       setFormData(selectedUser);
     }
   }, [selectedUser]);
@@ -159,7 +161,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
 
   const actionsData = [
     { id: "admin", name: "admin", label: "Admin" },
-    { id: "active", name: "active", label: "Active" },
+    { id: "isActive", name: "isActive", label: "Active" },
   ];
 
   return (
@@ -274,7 +276,7 @@ UpdateUser.propTypes = {
     admin: PropTypes.bool.isRequired,
     phonenumber: PropTypes.string.isRequired,
     sex: PropTypes.string.isRequired,
-    active: PropTypes.bool.isRequired,
+    isActive: PropTypes.bool.isRequired,
   }),
 };
 

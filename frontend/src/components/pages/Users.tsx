@@ -8,6 +8,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import UpdateUser from "../UpdateUser";
 import { deleteAccount, getUsers, updateAccount, updateUserPrivilege } from "../../api/user";
 import { useAuth } from "../../contexts/AuthContext";
+import { PasswordRounded } from "@mui/icons-material";
+import UpdateUserPassword from "../UpdateUserPassword";
 
 interface UserRow {
   id: string;
@@ -17,12 +19,20 @@ interface UserRow {
   sex: string;
   admin: boolean;
   phonenumber: string;
-  active: boolean;
+  isActive: boolean;
+}
+
+interface UserPassword {
+  id: string;
+  newPassword: string;
+  confirmPassword: string;
 }
 
 const Users: React.FC = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
+  const [openUpdatePassword, setOpenUpdatePassword] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserRow | null>(null);
+  const [selectedUserPassword, setSelectedUserPassword] = useState<UserPassword | null>(null);
   const [loading, setLoading] = useState(false);
   const { auth } = useAuth();
 
@@ -36,15 +46,33 @@ const Users: React.FC = () => {
     }, 0);
   };
 
+  const handleClickOpenUpdatePassword = (row: UserPassword) => {
+    setLoading(true);
+    setSelectedUserPassword(null);
+
+    setTimeout(() => {
+      setSelectedUserPassword(row);
+      setLoading(false);
+    }, 0);
+  }
+
   useEffect(() => {
     if (selectedUser && Object.keys(selectedUser).length > 0) {
       setOpenUpdate(true);
     }
   }, [selectedUser]);
 
+  useEffect(() => {
+    if (selectedUserPassword && Object.keys(selectedUserPassword).length > 0) {
+      setOpenUpdatePassword(true);
+    }
+  }, [selectedUserPassword]);
+
   const handleCloseUpdate = () => {
     setOpenUpdate(false);
+    setOpenUpdatePassword(false);
     setSelectedUser(null);
+    setSelectedUserPassword(null);
   };
 
   const handleUpdateUserInfo = (updatedUser: UserRow) => {
@@ -70,7 +98,26 @@ const Users: React.FC = () => {
       email: updatedUser.email,
       phoneNumber: updatedUser.phonenumber,
       gender: updatedUser.sex,
-      isActive: updatedUser.active
+      isActive: updatedUser.isActive
+    }).then(response => {
+      if (response.status === 200) {
+        console.log("User update successful");
+      } else {
+        console.error("User update failed: ", response.message);
+      }
+    });
+  };
+
+  const handleUpdateUserInfoPassword = (updatedUser: UserPassword) => {
+    handleCloseUpdate();
+    setSelectedUserPassword(updatedUser);
+
+    console.log(updatedUser.newPassword);
+
+    // update user password in backend
+    updateAccount({
+      id: updatedUser.id,
+      newPassword: updatedUser.newPassword
     }).then(response => {
       if (response.status === 200) {
         console.log("User update successful");
@@ -102,7 +149,7 @@ const Users: React.FC = () => {
       phonenumber: "1234567890",
       sex: "Female",
       admin: false,
-      active: true,
+      isActive: true,
     },
     {
       id: "2",
@@ -112,7 +159,7 @@ const Users: React.FC = () => {
       phonenumber: "1234567890",
       sex: "Female",
       admin: true,
-      active: true,
+      isActive: true,
     },
     {
       id: "3",
@@ -122,7 +169,7 @@ const Users: React.FC = () => {
       phonenumber: "1234567890",
       sex: "Male",
       admin: true,
-      active: true,
+      isActive: true,
     },
     {
       id: "4",
@@ -132,7 +179,7 @@ const Users: React.FC = () => {
       phonenumber: "1234567890",
       sex: "Male",
       admin: true,
-      active: true,
+      isActive: true,
     },
   ];
 
@@ -150,11 +197,11 @@ const Users: React.FC = () => {
     { field: "voucher", headerName: "Voucher", editable: false, width: 120 },
     { field: "admin", headerName: "Admin", editable: false, width: 70 },
     { field: "sex", headerName: "Gender", editable: false, width: 70 },
-    { field: "active", headerName: "Active", editable: false, width: 70 },
+    { field: "isActive", headerName: "Active", editable: false, width: 70 },
     {
       field: "actions",
       headerName: "Actions",
-      width: 100,
+      width: 150,
       headerAlign: "center",
       align: "center",
       renderCell: (params) => ( auth.id !== params.id ? (
@@ -169,7 +216,20 @@ const Users: React.FC = () => {
           >
             <EditIcon fontSize="small" sx={{ color: "blue" }} />
           </IconButton>
-
+          <IconButton
+            sx={{
+              border: "none",
+              borderRadius: "50%",
+            }}
+            aria-label="edit"
+            onClick={() => handleClickOpenUpdatePassword({
+              id: params.row.id,
+              newPassword: "",
+              confirmPassword: ""
+            })}
+          >
+            <PasswordRounded fontSize="small" sx={{ color: "green" }} />
+          </IconButton>
           <IconButton
             sx={{
               border: "none",
@@ -197,7 +257,7 @@ const Users: React.FC = () => {
             phonenumber: row.phoneNumber,
             sex: row.gender,
             admin: row.isAdmin,
-            active: true,
+            isActive: row.isActive,
           } as UserRow
         }));
       } else {
@@ -208,12 +268,12 @@ const Users: React.FC = () => {
   }
 
   // get users from database
-  useEffect(updateRows, [openUpdate]);
+  useEffect(updateRows, [openUpdate, openUpdatePassword]);
 
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Users
+        Manage Users
       </Typography>
       <DataGrid
         checkboxSelection
@@ -234,6 +294,14 @@ const Users: React.FC = () => {
           handleClose={handleCloseUpdate}
           handleUpdateUserInfo={handleUpdateUserInfo}
           selectedUser={selectedUser}
+        />
+      )}
+      {selectedUserPassword && (
+        <UpdateUserPassword
+          open={openUpdatePassword}
+          handleClose={handleCloseUpdate}
+          handleUpdateUserInfo={handleUpdateUserInfoPassword}
+          selectedUser={selectedUserPassword}
         />
       )}
     </Box>

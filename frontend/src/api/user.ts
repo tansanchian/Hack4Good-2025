@@ -168,7 +168,7 @@ async function resetPassword(token : string, password: string) {
 /**
  * An async function that updates a user's details.
  */
-async function updateAccount(details: { id: string, username : string, email : string, phoneNumber : string, gender: string, isActive: boolean }) {
+async function updateAccount(details: { id: string, username? : string, email? : string, phoneNumber? : string, gender?: string, isActive?: boolean, newPassword?: string }) {
   const updateAccountData = details;
   try {
     const response = await api.patch(USERS_BASE_URL + UPDATE_ACCOUNT_API, updateAccountData);
