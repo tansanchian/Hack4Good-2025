@@ -18,36 +18,28 @@ const VoucherTask = () => {
       title: "Im Approving",
       description: "Log in daily to earn points",
       points: 10,
-      isCompleted: true,
-      isAwaiting: true,
-      isPending: false,
+      status: "approval",
     },
     {
       id: 2,
       title: "Im Doing",
       description: "Buy something from the mart to earn rewards",
       points: 20,
-      isCompleted: false,
-      isAwaiting: false,
-      isPending: true,
+      status: "pending",
     },
     {
       id: 3,
       title: "I passed",
       description: "Buy something from the mart to earn rewards",
       points: 20,
-      isCompleted: true,
-      isAwaiting: false,
-      isPending: false,
+      status: "completed",
     },
     {
       id: 4,
       title: "I failed",
       description: "Buy something from the mart to earn rewards",
       points: 20,
-      isCompleted: false,
-      isAwaiting: false,
-      isPending: false,
+      status: "cancelled",
     },
   ]);
   const [successMessage, setSuccessMessage] = useState("");
@@ -58,14 +50,10 @@ const VoucherTask = () => {
   };
 
   const filteredTasks: { [key: number]: any[] } = {
-    0: tasks.filter((task) => task.isPending),
-    1: tasks.filter((task) => !task.isPending && task.isAwaiting),
-    2: tasks.filter(
-      (task) => !task.isPending && task.isCompleted && !task.isAwaiting
-    ),
-    3: tasks.filter(
-      (task) => !task.isPending && !task.isCompleted && !task.isAwaiting
-    ),
+    0: tasks.filter((task) => task.status == "pending"),
+    1: tasks.filter((task) => task.status == "approval"),
+    2: tasks.filter((task) => task.status == "completed"),
+    3: tasks.filter((task) => task.status == "cancelled"),
   };
 
   const completeTask = (taskId: number) => {
