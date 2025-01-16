@@ -16,14 +16,14 @@ import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid2";
 
 interface UserRow {
-  id: number;
+  id: string;
   name: string;
   email: string;
   voucher: string;
   sex: string;
   admin: boolean;
   phonenumber: string;
-  active: boolean;
+  isActive: boolean;
 }
 
 interface UpdateUserProps {
@@ -34,14 +34,14 @@ interface UpdateUserProps {
 }
 
 interface FormData {
-  id: number;
+  id: string;
   name: string;
   email: string;
   voucher: string;
   sex: string;
   admin: boolean;
   phonenumber: string;
-  active: boolean;
+  isActive: boolean;
 }
 
 interface ErrorState {
@@ -62,10 +62,12 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
     admin: { error: false, message: "" },
     sex: { error: false, message: "" },
     phonenumber: { error: false, message: "" },
+    isActive: { error: false, message: "" },
   });
 
   useEffect(() => {
     if (selectedUser) {
+      console.log(selectedUser);
       setFormData(selectedUser);
     }
   }, [selectedUser]);
@@ -74,6 +76,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
     event.preventDefault();
     if (validateInputs()) {
       handleUpdateUserInfo(formData as UserRow);
+      handleClose();
     }
   };
 
@@ -158,7 +161,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
 
   const actionsData = [
     { id: "admin", name: "admin", label: "Admin" },
-    { id: "active", name: "active", label: "Active" },
+    { id: "isActive", name: "isActive", label: "Active" },
   ];
 
   return (
@@ -266,14 +269,14 @@ UpdateUser.propTypes = {
   handleUpdateUserInfo: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   selectedUser: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
     voucher: PropTypes.string.isRequired,
     admin: PropTypes.bool.isRequired,
     phonenumber: PropTypes.string.isRequired,
     sex: PropTypes.string.isRequired,
-    active: PropTypes.bool.isRequired,
+    isActive: PropTypes.bool.isRequired,
   }),
 };
 

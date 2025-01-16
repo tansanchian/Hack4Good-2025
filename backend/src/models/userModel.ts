@@ -14,6 +14,10 @@ interface IUser extends Document {
     passwordResetToken?: string
     passwordResetTokenExpiration?: Date
     isAdmin: boolean
+    phoneNumber: string
+    voucher: string[]
+    gender: string
+    isActive: boolean
 }
 
 /**
@@ -55,6 +59,23 @@ const userSchema = new mongoose.Schema(
             type: Boolean,
             required: true,
             default: false
+        },
+        phoneNumber: {
+            type: String,
+            required: false
+        },
+        voucher: {
+            type: String,
+            required: false
+        },
+        gender: {
+            type: String,
+            required: false
+        },
+        isActive: {
+            type: Boolean,
+            required: true,
+            default: true
         },
     },
     {

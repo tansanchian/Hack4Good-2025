@@ -23,7 +23,6 @@ import {
   ReceiptLong,
   TaskRounded,
 } from "@mui/icons-material";
-import PeopleRounded from "@mui/icons-material/PeopleRounded";
 import AssignmentRounded from "@mui/icons-material/AssignmentRounded";
 
 export default function MenuContent() {
@@ -72,16 +71,21 @@ export default function MenuContent() {
     const path = getPathName();
 
     for (index = 0; index < mainListItems.length; index++) {
-      if (path === mainListItems[index].path) break;
+      if (path === mainListItems[index].path) {
+        setSelectedIndex(index);
+        return;
+      };
     }
     for (
       index = mainListItems.length;
       index < mainListItems.length + adminListItems.length;
       index++
     ) {
-      if (path === adminListItems[index - mainListItems.length].path) break;
+      if (path === adminListItems[index - mainListItems.length].path) {
+        setSelectedIndex(index);
+        return;
+      }
     }
-    setSelectedIndex(index);
   });
 
   const handleListItemClick = (index: number) => {
