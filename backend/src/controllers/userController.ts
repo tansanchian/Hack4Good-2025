@@ -6,8 +6,6 @@ import mongoose, { isValidObjectId } from "mongoose";
 // Internal project modules
 import generateTokenAndSetCookie from '../lib/generateToken';
 import User from '../models/userModel';
-import exp from "constants";
-import e from "cors";
 
 /**
  * Creates a new user account.
