@@ -35,24 +35,25 @@ export default function MenuContent() {
       icon: <AnalyticsRoundedIcon />,
       path: "/transactions",
     },
-    { text: "Users", icon: <PeopleRounded />, path: "/users" },
     { text: "Voucher Task", icon: <AssignmentRounded />, path: "/VoucherTask" },
-    {
-      text: "Voucher Approval",
-      icon: <AssignmentRounded />,
-      path: "/voucherApproval",
-    },
+    { text: "Accept Tasks", icon: <TaskRounded />, path: "/tasks" },
   ];
 
   const adminListItems = [
     { text: "Manage Users", icon: <ManageAccounts />, path: "/manage-users" },
+    { text: "Manage Tasks", icon: <ManageAccounts />, path: "/manage-tasks" },
     {
       text: "Manage Requests",
       icon: <ReceiptLong />,
       path: "/manage-requests",
     },
     { text: "Inventory", icon: <InventoryRounded />, path: "/inventory" },
-    { text: "Manage Voucher Tasks", icon: <TaskRounded />, path: "/tasks" },
+
+    {
+      text: "Voucher Approval",
+      icon: <AssignmentRounded />,
+      path: "/voucherApproval",
+    },
   ];
 
   const secondaryListItems = [
