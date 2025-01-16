@@ -9,6 +9,10 @@ import {
     getUser, 
     updateUser, 
     updateUserPrivilege,  
+    getVoucherBalance,
+    getCart,
+    getTransactionHistory,
+    getVoucherTasks
 } from '../controllers/userController';
 import { adminProtectRoute, protectRoute } from '../middlewares/protectRoute';
 
@@ -41,6 +45,14 @@ router.get("/:id", protectRoute, getUser);
  * Requires the user to be authenticated. Returns a list of all users in the database.
  */
 router.get("/", protectRoute, getAllUsers);
+
+router.get('/voucher/:id', protectRoute, getVoucherBalance);
+
+router.get('/cart/:id', protectRoute, getCart);
+
+router.get('/history/:id', protectRoute, getTransactionHistory);
+
+router.get('/tasks/:id', protectRoute, getVoucherTasks);
 
 /**
  * @route PATCH /update

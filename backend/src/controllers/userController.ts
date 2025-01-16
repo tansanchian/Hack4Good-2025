@@ -388,3 +388,91 @@ export async function updateUserPrivilege(req : Request, res : Response) {
     res.status(500).json({ message: "Unknown error when updating user privilege!" });
   }
 }
+
+export async function getVoucherBalance(req: Request, res: Response) {
+  try {
+    const userId = req.params.id;
+
+    if (!isValidObjectId(userId)) {
+      res.status(404).json({ message: `User ${userId} invalid` });
+      return;
+    }
+
+    const user = await  User.findById(userId);  
+    if (!user) {
+      res.status(404).json({ message: `User ${userId} not found` });
+      return;
+    }
+    
+    res.status(200).json({ message: `Voucher balance for user ${userId} is ${user.voucher}` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Unknown error when getting voucher balance!" });
+  }
+}
+
+export async function getCart(req: Request, res: Response) {
+  try {
+    const userId = req.params.id;
+
+    if (!isValidObjectId(userId)) {
+      res.status(404).json({ message: `User ${userId} invalid` });
+      return;
+    }
+
+    const user = await  User.findById(userId);          
+    if (!user) {
+      res.status(404).json({ message: `User ${userId} not found` });
+      return;
+    } 
+
+    res.status(200).json({ message: `Cart for user ${userId} is ${user.cart}` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Unknown error when getting cart!" });
+  } 
+}
+
+export async function getTransactionHistory(req: Request, res: Response) {
+  try {
+    const userId = req.params.id;
+
+    if (!isValidObjectId(userId)) {
+      res.status(404).json({ message: `User ${userId} invalid` });
+      return;
+    }
+
+    const user = await  User.findById(userId);    
+    if (!user) {
+      res.status(404).json({ message: `User ${userId} not found` });
+      return;
+    }
+
+    res.status(200).json({ message: `Transaction history for user ${userId} is ${user.transactionHistory}` });
+  } catch (err) { 
+    console.error(err);
+    res.status(500).json({ message: "Unknown error when getting transaction history!" });
+  }
+}
+
+export async function getVoucherTasks(req: Request, res: Response) {  
+  try {
+    const userId = req.params.id;
+
+    if (!isValidObjectId(userId)) {
+      res.status(404).json({ message: `User ${userId} invalid` });
+      return;
+    }
+
+    const user = await  User.findById(userId);
+    if (!user) {
+      res.status(404).json({ message: `User ${userId} not found` });
+      return;
+    }
+
+    res.status(200).json({ message: `Voucher tasks for user ${userId} are ${user.tasks}` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Unknown error when getting voucher tasks!" });
+  }
+} 
