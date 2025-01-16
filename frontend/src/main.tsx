@@ -123,7 +123,7 @@ ReactDOM.createRoot(root!).render(
           <Route path="voucherApproval" element={<VoucherApprovalReject />} />
           <Route path="tasks" element={<Tasks />} />
           <Route
-            path="users"
+            path="manage-users"
             element={
               <AdminRoute
                 adminRoute={<Users />}
