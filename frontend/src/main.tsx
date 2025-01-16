@@ -3,15 +3,20 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import LoginPage from "./components/login/LoginPage";
 import SignupPage from "./components/signup/SignupPage";
 import Dashboard from "./Dashboard";
-import Home from "./components/pages/home";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import Home from "./components/pages/home";
+import Invetory from "./components/pages/Inventory";
+import AuditLogsPage from "./components/pages/AuditLogsPage";
+import ReportsPage from "./components/pages/ReportsPage";
+import AdminDashboard from "./components/pages/AdminDashboard";
 import Products from "./components/pages/Products";
 import Transactions from "./components/pages/Transactions";
 import VoucherTask from "./components/pages/VoucherTask";
 import VoucherApprovalReject from "./components/pages/VoucherApprovalReject";
 import Users from "./components/pages/Users";
 import Tasks from "./components/pages/Tasks";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import ManageTasks from "./components/pages/ManageTasks";
 
 const root = document.getElementById("root");
 
@@ -117,11 +122,12 @@ ReactDOM.createRoot(root!).render(
           <Route path="voucherTask" element={<VoucherTask />} />
           <Route path="users" element={<Users />} />
           <Route path="voucherApproval" element={<VoucherApprovalReject />} />
+          <Route path="tasks" element={<Tasks />} />
           <Route
             path="manage-users"
             element={
               <AdminRoute
-                adminRoute={<Home />}
+                adminRoute={<Users />}
                 nonAdminRoute={<Navigate to="/" />}
               />
             }
@@ -130,7 +136,7 @@ ReactDOM.createRoot(root!).render(
             path="manage-requests"
             element={
               <AdminRoute
-                adminRoute={<Home />}
+                adminRoute={<AdminDashboard />}
                 nonAdminRoute={<Navigate to="/" />}
               />
             }
@@ -139,16 +145,16 @@ ReactDOM.createRoot(root!).render(
             path="inventory"
             element={
               <AdminRoute
-                adminRoute={<Home />}
+                adminRoute={<Invetory />}
                 nonAdminRoute={<Navigate to="/" />}
               />
             }
           />
           <Route
-            path="tasks"
+            path="manage-tasks"
             element={
               <AdminRoute
-                adminRoute={<Tasks />}
+                adminRoute={<ManageTasks />}
                 nonAdminRoute={<Navigate to="/" />}
               />
             }

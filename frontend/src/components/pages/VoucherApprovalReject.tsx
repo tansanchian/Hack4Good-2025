@@ -112,7 +112,10 @@ const VoucherApprovalReject = () => {
               style={{ width: 160, height: 160, borderRadius: "8px" }}
             />
             <Box>
-              <Typography variant="h6">{task.name}</Typography>
+              <Typography variant="h6" gutterBottom>
+                Name: {task.name}
+              </Typography>
+              <Typography variant="body2">Title</Typography>
               <Typography variant="body2">{task.title}</Typography>
               <Typography variant="body2">{task.description}</Typography>
               <Typography variant="body2" sx={{ mt: 1 }}>
