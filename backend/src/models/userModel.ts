@@ -1,5 +1,9 @@
 import mongoose, { Document } from "mongoose"
 
+import Product, { IProduct, productSchema } from "./productModel"
+import Task, { ITask, taskSchema } from "./taskModel"
+import Transaction, { ITransaction, transactionSchema } from "./transactionModel"
+
 /**
  * Interface for the User model, extending Mongoose's Document.
  * This interface defines the shape of a User document in the MongoDB collection
@@ -14,6 +18,10 @@ interface IUser extends Document {
     passwordResetToken?: string
     passwordResetTokenExpiration?: Date
     isAdmin: boolean
+    voucher: number
+    cart: IProduct[]
+    tasks: ITask[]
+    transactionHistory: ITransaction[]
 }
 
 /**
@@ -57,6 +65,26 @@ const userSchema = new mongoose.Schema(
             required: true,
             default: false
         },
+        voucher: {
+            type: Number,
+            default: 0,
+            required: false
+        },
+        cart: {
+            type: [productSchema],
+            default: [],
+            required: false
+        },
+        tasks: {
+            type: [taskSchema],
+            default: [],
+            required: false
+        },
+        transactionHistory: {
+            type: [transactionSchema],
+            default: [],
+            required: false
+        }
     },
     {
         timestamps: true,
