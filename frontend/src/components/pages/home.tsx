@@ -10,6 +10,7 @@ import {
   Card,
   IconButton,
   Divider,
+  Snackbar,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useAuth } from "../../contexts/AuthContext";
@@ -153,7 +154,6 @@ const Home: React.FC = () => {
         status: "cart"
       });
     }
-//    updateTransaction()
   };
 
   const handleSelect = (id: string) => {
@@ -218,6 +218,41 @@ const Home: React.FC = () => {
   useEffect(() => {
     f();
   }, [productList]);
+
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const displaySnackbar = (message : string) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+    console.log(message);
+  }
+
+  // close snackbar/toast
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  }
+
+  async function handleCheckOut() {
+    const userId = auth.id;
+    const transaction = await fetchUserCart(userId);
+
+    if (transaction !== null) {
+      await updateTransaction(transaction._id, {
+        status: "pending"
+      });
+    }
+    
+    displaySnackbar("You have checked out! Your transaction will be checked by one of our staff shortly.");
+    setProductList([]);
+
+    // create a new cart
+    createTransaction({
+      userId: userId,
+      products: [],
+      status: "cart"
+    });
+  }
 
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
@@ -305,11 +340,18 @@ const Home: React.FC = () => {
             variant="contained"
             color="primary"
             style={{ width: "150px" }}
+            onClick={ handleCheckOut }
           >
             Check Out
           </Button>
         </Box>
       </Paper>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+      />
     </Box>
   );
 };
