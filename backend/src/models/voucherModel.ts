@@ -10,7 +10,7 @@ interface IVoucher extends Document {
   description: string;
   points: number;
   slots: number;
-  acceptedBy: mongoose.Schema.Types.ObjectId[]; // Array of ObjectId referencing User
+  acceptedBy: mongoose.Schema.Types.ObjectId[];
   userStatuses: {
     userId: mongoose.Schema.Types.ObjectId;
     status: "pending" | "approval" | "completed" | "cancelled";

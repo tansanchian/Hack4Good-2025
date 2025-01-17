@@ -87,7 +87,7 @@ export const acceptVoucher = async (req: Request, res: Response) => {
     } else {
       user.userStatuses.push({
         voucherId,
-        status: "pending", // Add a new status for this voucher
+        status: "pending",
       });
     }
 

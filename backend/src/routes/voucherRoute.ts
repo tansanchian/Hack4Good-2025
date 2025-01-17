@@ -22,7 +22,7 @@ const router: Router = Router();
  * Endpoint to create a new user with the provided username, email, and password.
  * This route is not protected as it is intended for new users to register.
  */
-router.get("/", protectRoute, getAvailableVouchers);
+router.get("/", getAvailableVouchers);
 
 /**
  * @route GET /:id
@@ -31,7 +31,7 @@ router.get("/", protectRoute, getAvailableVouchers);
  *
  * Requires the user to be authenticated. Returns user data for the given user ID.
  */
-router.post("/create", protectRoute, adminProtectRoute, createVoucher);
+router.post("/create", createVoucher);
 
 /**
  * @route GET /

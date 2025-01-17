@@ -13,12 +13,16 @@ import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid2";
 
 interface TaskRow {
-  id: number;
+  _id: number;
   title: string;
   subtitle: string;
   description: string;
   points: number;
-  remainingSlots: number;
+  slots: number;
+  acceptedBy: any[];
+  userStatuses: any[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface UpdateTasksProps {
@@ -29,12 +33,16 @@ interface UpdateTasksProps {
 }
 
 interface FormData {
-  id: number;
+  _id: number;
   title: string;
   subtitle: string;
   description: string;
   points: number;
-  remainingSlots: number;
+  slots: number;
+  acceptedBy: any[];
+  userStatuses: any[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface ErrorState {
@@ -125,7 +133,7 @@ const UpdateTasks: React.FC<UpdateTasksProps> = ({
     {
       id: "remainingSlots",
       label: "Remaining Slots",
-      value: formData.remainingSlots,
+      value: formData.slots,
       type: "number",
       error: errorState.remainingSlots.error,
       helperText: errorState.remainingSlots.message,
@@ -188,12 +196,16 @@ UpdateTasks.propTypes = {
   handleUpdateTaskInfo: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   taskToEdit: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    _id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     subtitle: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     points: PropTypes.number.isRequired,
-    remainingSlots: PropTypes.number.isRequired,
+    slots: PropTypes.number.isRequired,
+    acceptedBy: PropTypes.arrayOf(PropTypes.any).isRequired,
+    userStatuses: PropTypes.arrayOf(PropTypes.any).isRequired,
+    createdAt: PropTypes.instanceOf(Date).isRequired,
+    updatedAt: PropTypes.instanceOf(Date).isRequired,
   }),
 };
 
