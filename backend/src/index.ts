@@ -9,6 +9,7 @@ import { PORT } from "./config";
 import authenticationRoute from "./routes/authenticationRoute";
 import userRoute from "./routes/userRoute";
 import voucherRoute from "./routes/voucherRoute";
+import productRoute from "./routes/productRoute";
 
 // Initialize Express Application
 const app: Application = express();
@@ -37,6 +38,7 @@ app.use(cookieParser());
 app.use("/authentication", authenticationRoute);
 app.use("/users", userRoute);
 app.use("/vouchers", voucherRoute);
+app.use("/products", productRoute);
 
 // Start Server and Connect to Database
 app.listen(port, () => {

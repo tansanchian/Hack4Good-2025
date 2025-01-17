@@ -9,7 +9,7 @@ import {
     getUser, 
     updateUser, 
     updateUserPrivilege,  
-    getVoucherBalance,
+    getVouchers,
     getCart,
     getTransactionHistory,
     getVoucherTasks,
@@ -56,7 +56,7 @@ router.get("/:id", protectRoute, getUser);
  */
 router.get("/", protectRoute, getAllUsers);
 
-router.get('/voucher/:id', protectRoute, getVoucherBalance);
+router.get('/voucher/:id', protectRoute, getVouchers);
 
 router.get('/cart/:id', protectRoute, getCart);
 
@@ -99,11 +99,6 @@ router.delete("/:id", protectRoute, deleteUser);
  * Body:
  * - `isAdmin` (boolean): Specifies whether the user should be granted admin privileges.
  */
-router.patch(
-  "/:id/privilege",
-  protectRoute,
-  adminProtectRoute,
-  updateUserPrivilege
-);
+router.patch("/:id/privilege", protectRoute, adminProtectRoute, updateUserPrivilege);
 
 export default router;
