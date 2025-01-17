@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { IconButton } from "@mui/material";
+import { Button, IconButton, Stack } from "@mui/material";
 import { DataGrid, GridRowClassNameParams, GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  deleteAccount,
-  getUsers,
-  updateAccount,
-  updateUserPrivilege,
-} from "../../api/user";
+import { createNewUser, deleteAccount, getUsers, updateAccount, updateUserPrivilege } from "../../api/user";
 import { useAuth } from "../../contexts/AuthContext";
 import { PasswordRounded } from "@mui/icons-material";
 import UpdateUserPassword from "../dashboard/UpdateUserPassword";
 import UpdateUser from "../dashboard/UpdateUser";
+import AddNewUser from "../dashboard/AddNewUser";
 
 interface UserRow {
   id: string;
@@ -33,7 +29,21 @@ interface UserPassword {
   confirmPassword: string;
 }
 
+export interface UserRowPassword {
+  id: string;
+  name: string;
+  email: string;
+  voucher: string;
+  sex: string;
+  admin: boolean;
+  phonenumber: string;
+  isActive: boolean;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 const Users: React.FC = () => {
+  const [openAdd, setOpenAdd] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openUpdatePassword, setOpenUpdatePassword] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserRow | null>(null);
@@ -75,11 +85,25 @@ const Users: React.FC = () => {
   }, [selectedUserPassword]);
 
   const handleCloseUpdate = () => {
+    setOpenAdd(false);
     setOpenUpdate(false);
     setOpenUpdatePassword(false);
     setSelectedUser(null);
     setSelectedUserPassword(null);
   };
+
+  const handleAddUserInfo = (newUser: UserRowPassword) => {
+    createNewUser(newUser).then(response => {
+      if (response.status === 201) {
+        console.log("User created successfully");
+        console.log("FULL RESPONSE: ", response);
+        updateRows();
+      } else {
+        console.error("User creation failed: ", response.message);
+        updateRows();
+      }
+    });
+  }
 
   const handleUpdateUserInfo = (updatedUser: UserRow) => {
     handleCloseUpdate();
@@ -164,49 +188,45 @@ const Users: React.FC = () => {
       width: 150,
       headerAlign: "center",
       align: "center",
-      renderCell: (params) =>
-        auth.id !== params.id ? (
-          <Box>
-            <IconButton
-              sx={{
-                border: "none",
-                borderRadius: "50%",
-              }}
-              aria-label="edit"
-              onClick={() => handleClickOpenUpdate(params.row as UserRow)}
-            >
-              <EditIcon fontSize="small" sx={{ color: "blue" }} />
-            </IconButton>
-            <IconButton
-              sx={{
-                border: "none",
-                borderRadius: "50%",
-              }}
-              aria-label="edit"
-              onClick={() =>
-                handleClickOpenUpdatePassword({
-                  id: params.row.id,
-                  newPassword: "",
-                  confirmPassword: "",
-                })
-              }
-            >
-              <PasswordRounded fontSize="small" sx={{ color: "green" }} />
-            </IconButton>
-            <IconButton
-              sx={{
-                border: "none",
-                borderRadius: "50%",
-              }}
-              aria-label="delete"
-              onClick={() => handleClickOpenDelete((params.row as UserRow).id)}
-            >
-              <DeleteIcon fontSize="small" sx={{ color: "red" }} />
-            </IconButton>
-          </Box>
-        ) : (
-          <></>
-        ),
+      renderCell: (params) => (
+        <Box>
+          <IconButton
+            sx={{
+              border: "none",
+              borderRadius: "50%",
+            }}
+            aria-label="edit"
+            onClick={() => handleClickOpenUpdate(params.row as UserRow)}
+          >
+            <EditIcon fontSize="small" sx={{ color: "blue" }} />
+          </IconButton>
+          <IconButton
+            sx={{
+              border: "none",
+              borderRadius: "50%",
+            }}
+            aria-label="edit"
+            onClick={() => handleClickOpenUpdatePassword({
+              id: params.row.id,
+              newPassword: "",
+              confirmPassword: ""
+            })}
+          >
+            <PasswordRounded fontSize="small" sx={{ color: "green" }} />
+          </IconButton>
+          { (auth.id !== params.id) ? 
+          <IconButton
+            sx={{
+              border: "none",
+              borderRadius: "50%",
+            }}
+            aria-label="delete"
+            onClick={() => handleClickOpenDelete((params.row as UserRow).id)}
+          >
+            <DeleteIcon fontSize="small" sx={{ color: "red" }} />
+          </IconButton> : <></> }
+        </Box>
+      ),
     },
   ];
 
@@ -239,9 +259,14 @@ const Users: React.FC = () => {
 
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Manage Users
-      </Typography>
+      <Stack direction="row" display="flex" alignItems="center" sx={{ mb: 2 }}>
+        <Typography flexGrow="1" component="h2" variant="h6">
+          Manage Users
+        </Typography>
+        <Button variant="outlined" onClick={() => setOpenAdd(true)}>
+          Add New User
+        </Button>
+      </Stack>
       <DataGrid
         checkboxSelection
         rows={rows}
@@ -254,6 +279,12 @@ const Users: React.FC = () => {
             backgroundColor: "secondary.main",
           },
         }}
+      />
+      <AddNewUser
+        open={openAdd}
+        handleClose={handleCloseUpdate}
+        handleUpdateUserInfo={handleAddUserInfo}
+        selectedUser={null}
       />
       {selectedUser && (
         <UpdateUser

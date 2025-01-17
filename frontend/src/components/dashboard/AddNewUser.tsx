@@ -14,9 +14,8 @@ import {
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid2";
-import { useAuth } from "../../contexts/AuthContext";
 
-interface UserRow {
+interface UserRowPassword {
   id: string;
   name: string;
   email: string;
@@ -25,13 +24,15 @@ interface UserRow {
   admin: boolean;
   phonenumber: string;
   isActive: boolean;
+  newPassword: string;
+  confirmPassword: string;
 }
 
 interface UpdateUserProps {
   open: boolean;
   handleClose: () => void;
-  handleUpdateUserInfo: (updatedUser: UserRow) => void;
-  selectedUser: UserRow | null;
+  handleUpdateUserInfo: (updatedUser: UserRowPassword) => void;
+  selectedUser: UserRowPassword | null;
 }
 
 interface FormData {
@@ -43,13 +44,15 @@ interface FormData {
   admin: boolean;
   phonenumber: string;
   isActive: boolean;
+  newPassword: string;
+  confirmPassword: string;
 }
 
 interface ErrorState {
   [key: string]: { error: boolean; message: string };
 }
 
-const UpdateUser: React.FC<UpdateUserProps> = ({
+const AddNewUser: React.FC<UpdateUserProps> = ({
   open,
   handleClose,
   handleUpdateUserInfo,
@@ -64,6 +67,8 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
     sex: { error: false, message: "" },
     phonenumber: { error: false, message: "" },
     isActive: { error: false, message: "" },
+    newPassword: { error: false, message: "" },
+    confirmPassword: { error: false, message: "" },
   });
 
   useEffect(() => {
@@ -76,7 +81,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (validateInputs()) {
-      handleUpdateUserInfo(formData as UserRow);
+      handleUpdateUserInfo(formData as UserRowPassword);
       handleClose();
     }
   };
@@ -117,10 +122,25 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
       setError("email", false, "");
     }
 
+    const confirmPassword = document.getElementById("confirmPassword") as HTMLInputElement;
+    const newPassword = document.getElementById("newPassword") as HTMLInputElement;
+
+    if (newPassword.value && newPassword.value.length < 8) {
+      setError("newPassword", true, "Password must be at least 8 characters long.");
+      isValid = false;
+    } else {
+      setError("newPassword", false, "");
+    }
+
+    if (confirmPassword.value && confirmPassword.value !== newPassword.value) {
+      setError("confirmPassword", true, "Passwords must match.");
+      isValid = false;
+    } else {
+      setError("confirmPassword", false, "");
+    }
+
     return isValid;
   };
-
-  const { auth } = useAuth();
 
   const formFieldsLeft = [
     {
@@ -162,9 +182,30 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
     },
   ];
 
+  const formFieldsRight = [
+    {
+      id: "newPassword",
+      label: "New Password",
+      placeholder: "●●●●●●●●",
+      type: "password",
+      value: formData.newPassword,
+      error: errorState.newPassword.error,
+      helperText: errorState.newPassword.message,
+    },
+    {
+      id: "confirmPassword",
+      label: "Confirm Password",
+      placeholder: "●●●●●●●●",
+      type: "password",
+      value: formData.confirmPassword,
+      error: errorState.confirmPassword.error,
+      helperText: errorState.confirmPassword.message,
+    },
+  ]
+
   const actionsData = [
-    { id: "admin", name: "admin", label: "Admin" },
-    { id: "isActive", name: "isActive", label: "Active" },
+    { id: "admin", name: "admin", label: "Admin", checked: false },
+    { id: "isActive", name: "isActive", label: "Active", checked: true },
   ];
 
   return (
@@ -183,7 +224,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
         sx: { backgroundImage: "none" },
       }}
     >
-      <DialogTitle id="user-dialog-title">User Details</DialogTitle>
+      <DialogTitle id="user-dialog-title">New User Details</DialogTitle>
       <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <Grid container spacing={5}>
           <Grid size={{ xs: 12, md: 6 }}>
@@ -202,7 +243,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
                     }
                     fullWidth
                   >
-                    {field.options.map((option) => (
+                    {field.options && field.options.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.label}
                       </MenuItem>
@@ -229,7 +270,6 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
               </FormControl>
             ))}
           </Grid>
-          { selectedUser && auth.id === selectedUser.id ? <></> :
           <Grid size={{ xs: 12, md: 6 }}>
             <Grid sx={{ display: "flex", flexDirection: "column" }}>
               <FormLabel>Actions</FormLabel>
@@ -240,7 +280,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
                     <Switch
                       name={action.name}
                       id={action.name}
-                      checked={Boolean(formData[action.name as keyof FormData])}
+                      checked={action.checked}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -255,7 +295,28 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
                 />
               ))}
             </Grid>
-          </Grid> }
+            {formFieldsRight.map((field) => (
+              <FormControl key={field.id} fullWidth sx={{ marginBottom: 2 }}>
+                <FormLabel htmlFor={field.id}>{field.label}</FormLabel>
+                  <TextField
+                    autoComplete={field.id}
+                    name={field.id}
+                    id={field.id}
+                    fullWidth
+                    variant="outlined"
+                    value={field.value}
+                    type={field.type}
+                    placeholder={field.placeholder}
+                    onChange={(e) =>
+                      setFormData({ ...formData, [field.id]: e.target.value })
+                    }
+                    error={field.error}
+                    helperText={field.helperText}
+                    color={field.error ? "error" : "primary"}
+                  />
+              </FormControl>
+            ))}
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions sx={{ pb: 3, px: 3 }}>
@@ -268,7 +329,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
   );
 };
 
-UpdateUser.propTypes = {
+AddNewUser.propTypes = {
   handleClose: PropTypes.func.isRequired,
   handleUpdateUserInfo: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
@@ -281,7 +342,9 @@ UpdateUser.propTypes = {
     phonenumber: PropTypes.string.isRequired,
     sex: PropTypes.string.isRequired,
     isActive: PropTypes.bool.isRequired,
+    newPassword: PropTypes.string.isRequired,
+    confirmPassword: PropTypes.string.isRequired,
   }),
 };
 
-export default UpdateUser;
+export default AddNewUser;

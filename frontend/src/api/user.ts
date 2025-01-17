@@ -11,6 +11,7 @@ export interface User {
 }
 
 import axios from "axios";
+import { UserRowPassword } from "../components/pages/Users";
 
 const USER_SERVICE_URL = "http://localhost:4000";
 const USERS_BASE_URL = "/users";
@@ -18,6 +19,7 @@ const AUTH_BASE_URL = "/authentication";
 const LOGIN_API = "/login";
 const LOGOUT_API = "/logout";
 const SIGNUP_API = "/";
+const CREATE_USER_API = "/new";
 const FORGOT_PASSWORD_API = "/forgot-password";
 const RESET_PASSWORD_API = "/reset-password";
 const UPDATE_ACCOUNT_API = "/update";
@@ -90,6 +92,24 @@ async function sendSignupRequest(username : string, emailAddress : string, passw
 
   try {
     const response = await api.post(USERS_BASE_URL + SIGNUP_API, signupData);
+    return {status: response.status, message: response.data.message};
+  } catch (error : any) {
+    return {status: error.response.status, message: error.response.data.message};
+  }
+}
+
+export async function createNewUser(details: UserRowPassword) {
+  try {
+    const submitDetails = {
+      username: details.name,
+      email: details.email, 
+      phoneNumber: details.phonenumber, 
+      gender: details.sex, 
+      isActive: details.isActive, 
+      isAdmin: details.admin, 
+      password: details.newPassword
+    }
+    const response = await api.post(USERS_BASE_URL + CREATE_USER_API, submitDetails);
     return {status: response.status, message: response.data.message};
   } catch (error : any) {
     return {status: error.response.status, message: error.response.data.message};
