@@ -9,6 +9,7 @@ import { getAllProducts, Product as ProductType } from "../../api/product";
 import Product from "../dashboard/Product";
 
 interface ProductDataType {
+  _id: string;
   image: string;
   title: string;
   price: number;
@@ -18,6 +19,7 @@ interface ProductDataType {
 
 const DEFAULT_PRODUCT_DATA: ProductDataType[] = [
   {
+    _id: "0",
     image: bg1,
     title: "apple",
     price: 2.99,
@@ -26,6 +28,7 @@ const DEFAULT_PRODUCT_DATA: ProductDataType[] = [
     quantity: 50,
   },
   {
+    _id: "1",
     image: bg2,
     title: "banana",
     price: 1.49,
@@ -34,6 +37,7 @@ const DEFAULT_PRODUCT_DATA: ProductDataType[] = [
     quantity: 50,
   },
   {
+    _id: "2",
     image: bg3,
     title: "orange",
     price: 3.19,
@@ -42,6 +46,7 @@ const DEFAULT_PRODUCT_DATA: ProductDataType[] = [
     quantity: 50,
   },
   {
+    _id: "3",
     image: bg4,
     title: "grape",
     price: 4.50,
@@ -60,6 +65,7 @@ export default function Products() {
         console.log(response);
         setProductData(response.productInfo.data.map((p: ProductType) => {
           return {
+            _id: p._id,
             image: p.imageUrl,
             title: p.name,
             price: p.price,
@@ -83,6 +89,7 @@ export default function Products() {
         {productData.map((item, index) => (
           <Col xs="12" sm="6" md="4" key={index}>
             <Product
+              id={item._id}
               image={item.image}
               title={item.title}
               subtitle=""

@@ -1,3 +1,4 @@
+import { Snackbar } from "@mui/material";
 import React, { useState } from "react";
 import {
   Card,
@@ -9,8 +10,12 @@ import {
   ModalBody,
   Button,
 } from "reactstrap";
+import { createTransaction, fetchUserCart, updateTransaction } from "../../api/transaction";
+import { useAuth } from "../../contexts/AuthContext";
+import { ProductAmount } from "../pages/home";
 
 interface ProductProps {
+  id: string;
   image: string;
   title: string;
   subtitle: string;
@@ -21,6 +26,7 @@ interface ProductProps {
 }
 
 const Product: React.FC<ProductProps> = ({
+  id,
   image,
   title,
   subtitle,
@@ -30,7 +36,67 @@ const Product: React.FC<ProductProps> = ({
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
+  const { auth } = useAuth();
+
   const toggleModal = () => setModalOpen(!modalOpen);
+
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const displaySnackbar = (message : string) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+    console.log(message);
+  }
+
+  // close snackbar/toast
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  }
+
+  const handleAddToCart = async () => {
+    toggleModal();
+
+    const transaction = await fetchUserCart(auth.id);
+
+    if (transaction === null) {
+      await createTransaction({
+        userId: auth.id,
+        products: [{
+          productId: id,
+          amount: 1
+        }],
+        status: "cart"
+      });
+    } else {
+      // product is in shopping cart
+      if (transaction.products.find((product: ProductAmount) => product.productId === id)) {
+        await updateTransaction(transaction._id, {
+          products: [
+            ...transaction.products.filter((product: ProductAmount) => product.productId !== id),
+            {       
+              productId: id,
+              amount: transaction.products.find((product: ProductAmount) => product.productId === id).amount + 1
+            }
+          ],
+          status: "cart"
+        });
+      } else {
+        await updateTransaction(transaction._id, {
+          products: [
+            ...transaction.products,
+            {       
+              productId: id,
+              amount: 1
+            }
+          ],
+          status: "cart"
+        });
+      }
+    }
+
+    displaySnackbar("Product " + (quantity > 0 ? "added to cart" : "added to cart as a preorder"));
+  }
 
   return (
     <>
@@ -109,12 +175,18 @@ const Product: React.FC<ProductProps> = ({
           <Button
             color="primary"
             style={{ marginTop: "16px", display: "block", width: "100%" }}
-            onClick={toggleModal}
+            onClick={handleAddToCart}
           >
             {quantity > 0 ? "Add to Cart" : "Preorder"}
           </Button>
         </ModalBody>
       </Modal>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+      />
     </>
   );
 };
