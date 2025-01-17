@@ -15,7 +15,8 @@ interface ProductProps {
   title: string;
   subtitle: string;
   price: string;
-  description: string; // Add description
+  description: string;
+  quantity: number;
   href?: string;
 }
 
@@ -25,6 +26,7 @@ const Product: React.FC<ProductProps> = ({
   subtitle,
   price,
   description,
+  quantity,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -76,17 +78,30 @@ const Product: React.FC<ProductProps> = ({
       <Modal isOpen={modalOpen} toggle={toggleModal} centered>
         <ModalHeader toggle={toggleModal}>{title}</ModalHeader>
         <ModalBody>
-          <CardImg
-            top
-            src={image}
-            alt={title}
-            style={{
-              height: "200px",
-              width: "100%",
-              objectFit: "cover",
-              marginBottom: "16px",
-            }}
-          />
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <CardImg
+              top
+              src={image}
+              alt={title}
+              style={{
+                height: "200px",
+                width: "60%",
+                objectFit: "cover",
+                marginBottom: "16px",
+              }}
+            />
+            <div style={{ textAlign: "right", width: "35%" }}>
+              <p
+                style={{
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  color: quantity > 0 ? "green" : "red",
+                }}
+              >
+                Quantity: {quantity > 0 ? quantity : "Out of stock"}
+              </p>
+            </div>
+          </div>
           <p style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "8px" }}>
             Price: {price}
           </p>
@@ -96,7 +111,7 @@ const Product: React.FC<ProductProps> = ({
             style={{ marginTop: "16px", display: "block", width: "100%" }}
             onClick={toggleModal}
           >
-            Add to Cart
+            {quantity > 0 ? "Add to Cart" : "Preorder"}
           </Button>
         </ModalBody>
       </Modal>

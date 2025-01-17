@@ -21,6 +21,7 @@ interface InventoryRow {
   category: string;
   quantity: string;
   price: string;
+  preorder: string;
 }
 
 interface UpdateInventoryProps {
@@ -38,6 +39,7 @@ interface FormData {
   category: string;
   quantity: string;
   price: string;
+  preorder: string;
 }
 
 interface ErrorState {
@@ -58,6 +60,7 @@ const UpdateInventory: React.FC<UpdateInventoryProps> = ({
     category: { error: false, message: "" },
     quantity: { error: false, message: "" },
     price: { error: false, message: "" },
+    preorder: { error: false, message: "" },
   });
 
   useEffect(() => {
@@ -145,6 +148,15 @@ const UpdateInventory: React.FC<UpdateInventoryProps> = ({
       error: errorState.price.error,
       helperText: errorState.price.message,
     },
+    {
+      id: "preorder",
+      label: "Preorder",
+      type: "number",
+      value: formData.preorder,
+      placeholder: "Preorder quantity",
+      error: errorState.preorder?.error || false,
+      helperText: errorState.preorder?.message || "",
+    }
   ];
 
   return (
@@ -235,6 +247,7 @@ UpdateInventory.propTypes = {
     category: PropTypes.string.isRequired,
     quantity: PropTypes.string.isRequired,
     price: PropTypes.string.isRequired,
+    preorder: PropTypes.string.isRequired,
   }),
 };
 
