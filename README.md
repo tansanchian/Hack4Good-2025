@@ -59,7 +59,7 @@ Replace <repository-url> with the URL of your Git repository.
 
 4. Start the frontend development server:
 
-`npm run`
+`npm run start`
 
 Your frontend should now be running. The application will usually be accessible at [http://localhost:5173](http://localhost:5173) by default.
 
@@ -79,16 +79,16 @@ Your frontend should now be running. The application will usually be accessible 
 
 4. Start the backend server:
 
-`npm run`
+`npm run start`
 
-The backend server should now be running, typically accessible at [http://localhost:8080](http://localhost:8080) (depending on your configuration).
+The backend server should now be running, typically accessible at [http://localhost:4000](http://localhost:4000) (depending on your configuration).
 
 ## Development Workflow
 
 Once both frontend and backend servers are running, you can interact with the Scheduler Web Application via your browser.
 
 - Frontend URL: Open [http://localhost:5173](http://localhost:5173) to access the user interface.
-- Backend URL: The backend will be running on [http://localhost:8080](http://localhost:8080) (or the port you configured).
+- Backend URL: The backend will be running on [http://localhost:4000](http://localhost:4000) (or the port you configured).
 
 You can now begin working on the application, adding features, fixing bugs, or adjusting the user interface.
 
@@ -127,7 +127,7 @@ By automating repetitive tasks and creating a centralized platform, the system s
 
 ## Prototype Components
 
-### Frontend (React)
+### Frontend (React.js)
 
 - User interface for residents and administrators.
 - Accessible, intuitive design to improve usability.
