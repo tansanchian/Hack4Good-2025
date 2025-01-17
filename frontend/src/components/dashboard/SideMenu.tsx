@@ -6,12 +6,11 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import SelectContent from "./SelectContent";
 import MenuContent from "./MenuContent";
-import CardAlert from "./CardAlert";
-import OptionsMenu from "./OptionsMenu";
 import Logo from "../Logo";
 import { useAuth } from "../../contexts/AuthContext";
+import MenuButton from "./MenuButton";
+import { LogoutRounded } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -28,7 +27,11 @@ const Drawer = styled(MuiDrawer)({
 
 export default function SideMenu() {
 
-  const { auth } = useAuth();
+  const { auth, logout } = useAuth();
+  
+  function handleLogoutClick() {
+    logout();
+  }
 
   return (
     <Drawer
@@ -80,7 +83,13 @@ export default function SideMenu() {
             { auth.email }         
           </Typography>
         </Box>
-        <OptionsMenu />
+        <MenuButton
+          aria-label="Logout"
+          onClick={handleLogoutClick}
+          sx={{ borderColor: 'transparent' }}
+        >
+          <LogoutRounded />
+        </MenuButton>
       </Stack>
     </Drawer>
   );

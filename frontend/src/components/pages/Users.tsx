@@ -13,7 +13,7 @@ import {
 } from "../../api/user";
 import { useAuth } from "../../contexts/AuthContext";
 import { PasswordRounded } from "@mui/icons-material";
-import UpdateUserPassword from "../UpdateUserPassword";
+import UpdateUserPassword from "../dashboard/UpdateUserPassword";
 import UpdateUser from "../dashboard/UpdateUser";
 
 interface UserRow {
