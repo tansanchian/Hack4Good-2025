@@ -19,7 +19,6 @@ interface ProductProps {
   price: string;
   description: string;
   quantity: number;
-  href?: string;
 }
 
 const Product: React.FC<ProductProps> = ({
