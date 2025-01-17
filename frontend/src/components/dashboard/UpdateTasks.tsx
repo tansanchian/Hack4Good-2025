@@ -13,16 +13,12 @@ import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid2";
 
 interface TaskRow {
-  _id: number;
+  _id: string;
   title: string;
   subtitle: string;
   description: string;
   points: number;
   slots: number;
-  acceptedBy: any[];
-  userStatuses: any[];
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 interface UpdateTasksProps {
@@ -33,16 +29,12 @@ interface UpdateTasksProps {
 }
 
 interface FormData {
-  _id: number;
+  _id: string;
   title: string;
   subtitle: string;
   description: string;
   points: number;
   slots: number;
-  acceptedBy: any[];
-  userStatuses: any[];
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 interface ErrorState {
@@ -61,7 +53,7 @@ const UpdateTasks: React.FC<UpdateTasksProps> = ({
     subtitle: { error: false, message: "" },
     description: { error: false, message: "" },
     points: { error: false, message: "" },
-    remainingSlots: { error: false, message: "" },
+    slots: { error: false, message: "" },
   });
 
   useEffect(() => {
@@ -85,14 +77,44 @@ const UpdateTasks: React.FC<UpdateTasksProps> = ({
   };
 
   const validateInputs = (): boolean => {
-    const name = document.getElementById("name") as HTMLInputElement;
+    const title = document.getElementById("title") as HTMLInputElement;
+    const subtitle = document.getElementById("subtitle") as HTMLInputElement;
+    const description = document.getElementById(
+      "description"
+    ) as HTMLInputElement;
+    const points = document.getElementById("points") as HTMLInputElement;
+    const slots = document.getElementById("slots") as HTMLInputElement;
     let isValid = true;
 
-    if (!name.value || name.value.length < 1) {
-      setError("name", true, "Name is required.");
+    if (!title.value || title.value.length < 1) {
+      setError("title", true, "Title is required.");
       isValid = false;
     } else {
-      setError("name", false, "");
+      setError("title", false, "");
+    }
+    if (!subtitle.value || subtitle.value.length < 1) {
+      setError("subtitle", true, "Subtitle is required.");
+      isValid = false;
+    } else {
+      setError("subtitle", false, "");
+    }
+    if (!description.value || description.value.length < 1) {
+      setError("description", true, "Description is required.");
+      isValid = false;
+    } else {
+      setError("description", false, "");
+    }
+    if (!points.value || points.value.length < 1) {
+      setError("points", true, "Points is required.");
+      isValid = false;
+    } else {
+      setError("points", false, "");
+    }
+    if (!slots.value || slots.value.length < 1) {
+      setError("slots", true, "Slots is required.");
+      isValid = false;
+    } else {
+      setError("slots", false, "");
     }
 
     return isValid;
@@ -131,12 +153,12 @@ const UpdateTasks: React.FC<UpdateTasksProps> = ({
       helperText: errorState.points.message,
     },
     {
-      id: "remainingSlots",
-      label: "Remaining Slots",
+      id: "slots",
+      label: "Slots",
       value: formData.slots,
       type: "number",
-      error: errorState.remainingSlots.error,
-      helperText: errorState.remainingSlots.message,
+      error: errorState.slots.error,
+      helperText: errorState.slots.message,
     },
   ];
 
@@ -196,7 +218,7 @@ UpdateTasks.propTypes = {
   handleUpdateTaskInfo: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   taskToEdit: PropTypes.shape({
-    _id: PropTypes.number.isRequired,
+    _id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     subtitle: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
@@ -204,8 +226,8 @@ UpdateTasks.propTypes = {
     slots: PropTypes.number.isRequired,
     acceptedBy: PropTypes.arrayOf(PropTypes.any).isRequired,
     userStatuses: PropTypes.arrayOf(PropTypes.any).isRequired,
-    createdAt: PropTypes.instanceOf(Date).isRequired,
-    updatedAt: PropTypes.instanceOf(Date).isRequired,
+    createdAt: PropTypes.string.isRequired,
+    updatedAt: PropTypes.string.isRequired,
   }),
 };
 

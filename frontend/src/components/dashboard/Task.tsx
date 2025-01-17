@@ -9,25 +9,29 @@ import {
   DialogTitle,
   Button,
 } from "@mui/material";
+import { acceptVoucher } from "../../api/voucher";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface TaskProps {
+  _id: string;
   title: string;
   subtitle: string;
   description: string;
   points: number;
-  remainingSlots: number;
+  slots: number;
 }
 
 const Task: React.FC<TaskProps> = ({
+  _id,
   title,
   subtitle,
   description,
   points,
-  remainingSlots,
+  slots,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
-
   const toggleModal = () => setModalOpen(!modalOpen);
+  const { auth } = useAuth();
 
   return (
     <>
@@ -80,7 +84,7 @@ const Task: React.FC<TaskProps> = ({
             Points: {points}
           </Typography>
           <Typography variant="body2" color="textSecondary">
-            Remaining Slots: {remainingSlots}
+            Remaining Slots: {slots}
           </Typography>
         </CardContent>
       </Card>
@@ -91,14 +95,13 @@ const Task: React.FC<TaskProps> = ({
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
             {title}
           </Typography>
+          <Typography variant="body2" color="textSecondary">
+            {subtitle}
+          </Typography>
         </DialogTitle>
         <DialogContent>
           {/* Description for the task */}
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            sx={{ marginBottom: "16px" }}
-          >
+          <Typography variant="body2" color="textSecondary">
             {description}
           </Typography>
           {/* Points and Remaining Slots inside Modal */}
@@ -106,15 +109,16 @@ const Task: React.FC<TaskProps> = ({
             Points: {points}
           </Typography>
           <Typography variant="body2" color="textSecondary">
-            Remaining Slots: {remainingSlots}
+            Remaining Slots: {slots}
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button
             color="primary"
-            onClick={() => {
+            onClick={async () => {
               toggleModal();
-              alert(`Task "${title}" accepted!`);
+              const response = await acceptVoucher(_id, auth.id);
+              alert(response.message);
             }}
             fullWidth
           >

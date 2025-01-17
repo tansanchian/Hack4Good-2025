@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   Typography,
@@ -7,45 +7,57 @@ import {
   Snackbar,
   Tabs,
   Tab,
+  CardContent,
   Divider,
 } from "@mui/material";
+import { getAvailableVouchers, approveRejectVoucher } from "../../api/voucher";
 
 const VoucherApprovalReject = () => {
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      title: "da,m",
-      description: "Submitted a voucher for travel expenses.",
-      points: 10,
-      photoUrl:
-        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
-      status: "pending",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      title: "da,m",
-      description: "Submitted a voucher for food expenses.",
-      points: 20,
-      photoUrl:
-        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
-      status: "approved",
-    },
-    {
-      id: 3,
-      name: "Bob Johnson",
-      title: "da,m",
-      description: "Submitted a voucher for accommodation.",
-      points: 15,
-      photoUrl:
-        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
-      status: "rejected",
-    },
-  ]);
-
+  const [tasks, setTasks] = useState<any[]>([]);
   const [successMessage, setSuccessMessage] = useState("");
   const [currentTab, setCurrentTab] = useState(0);
+
+  useEffect(() => {
+    const fetchVouchers = async () => {
+      const response = await getAvailableVouchers();
+      const data = response.voucherInfo;
+      const modifiedData = data.flatMap((x) =>
+        x.userStatuses.flatMap((y) => ({
+          voucherId: { ...x },
+          ...y,
+        }))
+      );
+      setTasks(modifiedData);
+    };
+    fetchVouchers();
+  }, []);
+
+  // Approve a task
+  // Approve a task
+  const approveTask = async (
+    voucherId: string,
+    userId: string,
+    action: string
+  ) => {
+    try {
+      // Call the API to approve or reject the voucher
+      const res = await approveRejectVoucher(voucherId, userId, action);
+      setSuccessMessage(res.message);
+
+      // Refetch vouchers after approval/rejection
+      const response = await getAvailableVouchers();
+      const data = response.voucherInfo;
+      const modifiedData = data.flatMap((x) =>
+        x.userStatuses.flatMap((y) => ({
+          voucherId: { ...x },
+          ...y,
+        }))
+      );
+      setTasks(modifiedData); // Update the state with the new data
+    } catch (error) {
+      console.error("Error approving/rejecting voucher:", error);
+    }
+  };
 
   // Handle tab changes
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -54,27 +66,9 @@ const VoucherApprovalReject = () => {
 
   // Define the type for filteredTasks
   const filteredTasks: { [key: number]: typeof tasks } = {
-    0: tasks.filter((task) => task.status === "pending"),
-    1: tasks.filter((task) => task.status === "approved"),
-    2: tasks.filter((task) => task.status === "rejected"),
-  };
-
-  // Approve a task
-  const approveTask = (taskId: number) => {
-    const updatedTasks = tasks.map((task) =>
-      task.id === taskId ? { ...task, status: "approved" } : task
-    );
-    setTasks(updatedTasks);
-    setSuccessMessage("Task approved successfully!");
-  };
-
-  // Reject a task
-  const rejectTask = (taskId: number) => {
-    const updatedTasks = tasks.map((task) =>
-      task.id === taskId ? { ...task, status: "rejected" } : task
-    );
-    setTasks(updatedTasks);
-    setSuccessMessage("Task rejected successfully!");
+    0: tasks.filter((task) => task.status === "approval"),
+    1: tasks.filter((task) => task.status === "completed"),
+    2: tasks.filter((task) => task.status === "cancelled"),
   };
 
   return (
@@ -92,78 +86,107 @@ const VoucherApprovalReject = () => {
 
       <Divider sx={{ my: 2 }} />
 
-      {/* Render filtered tasks based on the current tab */}
-      {filteredTasks[currentTab].map((task) => (
-        <Card
-          key={task.id}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            marginBottom: 2,
-            padding: 2,
-            height: "auto", // Ensures the card expands to accommodate all content
-            position: "relative", // To position the status and buttons at the bottom right
-          }}
-        >
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <img
-              src={task.photoUrl}
-              alt={`${task.name}'s submission`}
-              style={{ width: 160, height: 160, borderRadius: "8px" }}
-            />
-            <Box>
-              <Typography variant="h6" gutterBottom>
-                Name: {task.name}
-              </Typography>
-              <Typography variant="body2">Title</Typography>
-              <Typography variant="body2">{task.title}</Typography>
-              <Typography variant="body2">{task.description}</Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                Points: {task.points}
-              </Typography>
-            </Box>
-          </Box>
-
-          {/* Position both the buttons and status at the bottom right */}
-          <Box
+      {filteredTasks[currentTab].length > 0 ? (
+        filteredTasks[currentTab].map((task) => (
+          <Card
+            key={task.id}
             sx={{
-              position: "absolute",
-              bottom: 16, // 16px from the bottom
-              right: 16, // 16px from the right
               display: "flex",
-              gap: 1,
-              flexDirection: "column", // Stack buttons and status vertically
-              alignItems: "flex-end",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              height: "100%", // Ensures card height grows as necessary
+              marginBottom: "10px",
+              position: "relative", // Allow absolute positioning of elements inside the card
             }}
           >
-            {currentTab === 0 ? (
-              <>
-                <Box sx={{ display: "flex", gap: 1 }}>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    sx={{ width: "100px" }}
-                    onClick={() => approveTask(task.id)}
-                  >
-                    Approve
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    sx={{ width: "100px" }}
-                    onClick={() => rejectTask(task.id)}
-                  >
-                    Reject
-                  </Button>
-                </Box>
-              </>
-            ) : (
-              <Typography variant="body2">{task.status}</Typography>
-            )}
-          </Box>
-        </Card>
-      ))}
+            <CardContent sx={{ flexGrow: 1, padding: 0.5 }}>
+              <Typography variant="h5" gutterBottom fontWeight="bold">
+                Name: {task.userId}
+              </Typography>
+              <Typography variant="h5" gutterBottom fontWeight="bold">
+                {task.voucherId.title}
+              </Typography>
+              <Typography variant="h6" color="textSecondary">
+                {task.voucherId.subtitle}
+              </Typography>
+              <Divider sx={{ my: 1 }} />
+              <Typography variant="body1" color="textSecondary">
+                {task.voucherId.description}
+              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", marginTop: 2 }}>
+                <Typography
+                  variant="body1"
+                  fontWeight="bold"
+                  sx={{ marginRight: 1 }}
+                >
+                  Points:
+                </Typography>
+                <Typography variant="body1" color="primary">
+                  {task.voucherId.points}
+                </Typography>
+              </Box>
+            </CardContent>
 
+            {/* Position both the buttons and status at the bottom right */}
+            <Box
+              sx={{
+                position: "absolute",
+                bottom: 16, // 16px from the bottom
+                right: 16, // 16px from the right
+                display: "flex",
+                gap: 1,
+                flexDirection: "column", // Stack buttons and status vertically
+                alignItems: "flex-end",
+              }}
+            >
+              {currentTab === 0 ? (
+                <>
+                  <Box sx={{ display: "flex", gap: 1 }}>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      sx={{ width: "100px" }}
+                      onClick={() =>
+                        approveTask(
+                          task.voucherId._id,
+                          task.userId,
+                          "completed"
+                        )
+                      }
+                    >
+                      Approve
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      sx={{ width: "100px" }}
+                      onClick={() =>
+                        approveTask(
+                          task.voucherId._id,
+                          task.userId,
+                          "cancelled"
+                        )
+                      }
+                    >
+                      Reject
+                    </Button>
+                  </Box>
+                </>
+              ) : (
+                <Typography variant="body2">{task.status}</Typography>
+              )}
+            </Box>
+          </Card>
+        ))
+      ) : (
+        <Typography
+          variant="body1"
+          color="textSecondary"
+          sx={{ textAlign: "center", marginTop: 2 }}
+        >
+          No Content
+        </Typography>
+      )}
       {/* Snackbar for success messages */}
       <Snackbar
         open={!!successMessage}

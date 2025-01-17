@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -10,40 +10,14 @@ import {
   Tab,
   Divider,
 } from "@mui/material";
+import { getUserVoucher, completeVoucher } from "../../api/voucher";
+import { useAuth } from "../../contexts/AuthContext";
 
 const VoucherTask = () => {
-  const [tasks, setTasks] = useState<any[]>([
-    {
-      id: 1,
-      title: "Im Approving",
-      description: "Log in daily to earn points",
-      points: 10,
-      status: "approval",
-    },
-    {
-      id: 2,
-      title: "Im Doing",
-      description: "Buy something from the mart to earn rewards",
-      points: 20,
-      status: "pending",
-    },
-    {
-      id: 3,
-      title: "I passed",
-      description: "Buy something from the mart to earn rewards",
-      points: 20,
-      status: "completed",
-    },
-    {
-      id: 4,
-      title: "I failed",
-      description: "Buy something from the mart to earn rewards",
-      points: 20,
-      status: "cancelled",
-    },
-  ]);
+  const [tasks, setTasks] = useState<any[]>([]);
   const [successMessage, setSuccessMessage] = useState("");
   const [currentTab, setCurrentTab] = useState(0);
+  const { auth } = useAuth();
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue);
@@ -56,13 +30,31 @@ const VoucherTask = () => {
     3: tasks.filter((task) => task.status == "cancelled"),
   };
 
-  const completeTask = (taskId: number) => {
-    const updatedTasks = tasks.map((task) =>
-      task.id === taskId ? { ...task, isCompleted: true } : task
-    );
-    setTasks(updatedTasks);
-    setSuccessMessage("Task completed!");
+  const completeTask = async (taskId: string) => {
+    try {
+      // Call the API to complete the voucher
+      const response = await completeVoucher(taskId, auth.id);
+      setSuccessMessage(response.message);
+
+      // Fetch the updated list of tasks after completion
+      const updatedTasks = await getUserVoucher(auth.id);
+      setTasks(updatedTasks.voucherInfo.userStatuses); // Update the state with the new data
+    } catch (error) {
+      console.error("Error completing task:", error);
+    }
   };
+
+  useEffect(() => {
+    const fetchVouchers = async () => {
+      try {
+        const response = await getUserVoucher(auth.id);
+        setTasks(response.voucherInfo.userStatuses); // Set the initial state
+      } catch (error) {
+        console.error("Error fetching vouchers:", error);
+      }
+    };
+    fetchVouchers();
+  }, []);
 
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
@@ -78,56 +70,77 @@ const VoucherTask = () => {
       </Tabs>
 
       <Divider style={{ margin: "16px 0" }} />
-
-      {filteredTasks[currentTab].map((task) => (
-        <Card
-          key={task.id}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            height: "100%", // Ensures card height grows as necessary
-            marginBottom: "10px",
-            position: "relative", // Allow absolute positioning of elements inside the card
-          }}
-        >
-          <CardContent sx={{ flexGrow: 1 }}>
-            <Typography variant="h6" gutterBottom>
-              {task.title}
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              {task.description}
-            </Typography>
-            <Typography variant="body2" sx={{ marginBottom: 2 }}>
-              Points: {task.points}
-            </Typography>
-          </CardContent>
-
-          {/* Positioning the button at the bottom-right */}
-          <Box
+      {filteredTasks[currentTab].length > 0 ? (
+        filteredTasks[currentTab].map((task) => (
+          <Card
+            key={task.id}
             sx={{
-              position: "absolute",
-              bottom: 16, // 16px from the bottom of the card
-              right: 16, // 16px from the right side of the card
               display: "flex",
-              gap: 1,
-              flexDirection: "column", // Stack buttons vertically if needed
-              alignItems: "flex-end",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              height: "100%", // Ensures card height grows as necessary
+              marginBottom: "10px",
+              position: "relative", // Allow absolute positioning of elements inside the card
             }}
           >
-            {currentTab === 0 && (
-              <Button
-                onClick={() => completeTask(task.id)}
-                variant="contained"
-                color="secondary"
-                sx={{ width: "120px" }}
-              >
-                Complete
-              </Button>
-            )}
-          </Box>
-        </Card>
-      ))}
+            <CardContent sx={{ flexGrow: 1, padding: 0.5 }}>
+              <Typography variant="h5" gutterBottom fontWeight="bold">
+                {task.voucherId.title}
+              </Typography>
+              <Typography variant="h6" color="textSecondary">
+                {task.voucherId.subtitle}
+              </Typography>
+              <Divider sx={{ my: 1 }} />
+              <Typography variant="body1" color="textSecondary">
+                {task.voucherId.description}
+              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", marginTop: 2 }}>
+                <Typography
+                  variant="body1"
+                  fontWeight="bold"
+                  sx={{ marginRight: 1 }}
+                >
+                  Points:
+                </Typography>
+                <Typography variant="body1" color="primary">
+                  {task.voucherId.points}
+                </Typography>
+              </Box>
+            </CardContent>
+
+            {/* Positioning the button at the bottom-right */}
+            <Box
+              sx={{
+                position: "absolute",
+                bottom: 16, // 16px from the bottom of the card
+                right: 16, // 16px from the right side of the card
+                display: "flex",
+                gap: 1,
+                flexDirection: "column", // Stack buttons vertically if needed
+                alignItems: "flex-end",
+              }}
+            >
+              {currentTab === 0 && (
+                <Button
+                  onClick={() => completeTask(task.voucherId._id)}
+                  variant="contained"
+                  sx={{ width: "120px" }}
+                >
+                  Complete
+                </Button>
+              )}
+            </Box>
+          </Card>
+        ))
+      ) : (
+        <Typography
+          variant="body1"
+          color="textSecondary"
+          sx={{ textAlign: "center", marginTop: 2 }}
+        >
+          No Missions
+        </Typography>
+      )}
 
       <Snackbar
         open={!!successMessage}

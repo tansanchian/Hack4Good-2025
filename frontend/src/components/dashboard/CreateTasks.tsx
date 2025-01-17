@@ -13,27 +13,26 @@ import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid2";
 
 interface TaskRow {
-  id: number;
+  _id: string;
   title: string;
   subtitle: string;
   description: string;
   points: number;
-  remainingSlots: number;
+  slots: number;
 }
 
 interface CreateTasksProps {
   open: boolean;
   handleClose: () => void;
-  handleUpdateTaskInfo: (updatedTask: TaskRow) => void;
+  handleCreateTask: (createTask: TaskRow) => void;
 }
 
 interface FormData {
-  id: number;
   title: string;
   subtitle: string;
   description: string;
   points: number;
-  remainingSlots: number;
+  slots: number;
 }
 
 interface ErrorState {
@@ -43,35 +42,32 @@ interface ErrorState {
 const CreateTasks: React.FC<CreateTasksProps> = ({
   open,
   handleClose,
-  handleUpdateTaskInfo,
+  handleCreateTask,
 }) => {
   const [formData, setFormData] = useState<FormData>({
-    id: 0,
     title: "",
     subtitle: "",
     description: "",
     points: 0,
-    remainingSlots: 0,
+    slots: 0,
   });
 
   useEffect(() => {
     if (open) {
       setFormData({
-        id: 0,
         title: "",
         subtitle: "",
         description: "",
         points: 0,
-        remainingSlots: 0,
+        slots: 0,
       });
 
       setErrorState({
         title: { error: false, message: "" },
         subtitle: { error: false, message: "" },
         description: { error: false, message: "" },
-        image: { error: false, message: "" },
         price: { error: false, message: "" },
-        remainingSlots: { error: false, message: "" },
+        slots: { error: false, message: "" },
       });
     }
   }, [open]);
@@ -80,15 +76,14 @@ const CreateTasks: React.FC<CreateTasksProps> = ({
     title: { error: false, message: "" },
     description: { error: false, message: "" },
     subtitle: { error: false, message: "" },
-    image: { error: false, message: "" },
     price: { error: false, message: "" },
-    remainingSlots: { error: false, message: "" },
+    slots: { error: false, message: "" },
   });
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (validateInputs()) {
-      handleUpdateTaskInfo(formData as TaskRow);
+      handleCreateTask(formData as TaskRow);
     }
   };
 
@@ -105,10 +100,8 @@ const CreateTasks: React.FC<CreateTasksProps> = ({
       "description"
     ) as HTMLInputElement;
     const subtitle = document.getElementById("subtitle") as HTMLInputElement;
-    const price = document.getElementById("price") as HTMLInputElement;
-    const remainingSlots = document.getElementById(
-      "quantity"
-    ) as HTMLInputElement;
+    const points = document.getElementById("points") as HTMLInputElement;
+    const slots = document.getElementById("slots") as HTMLInputElement;
     let isValid = true;
 
     if (!title || !title.value || title.value.length < 1) {
@@ -129,21 +122,17 @@ const CreateTasks: React.FC<CreateTasksProps> = ({
     } else {
       setError("description", false, "");
     }
-    if (!price || !price.value || price.value.length < 1) {
-      setError("price", true, "Price is required.");
+    if (!points || !points.value || points.value.length < 1) {
+      setError("points", true, "Points is required.");
       isValid = false;
     } else {
       setError("price", false, "");
     }
-    if (
-      !remainingSlots ||
-      !remainingSlots.value ||
-      remainingSlots.value.length < 1
-    ) {
-      setError("remainingSlots", true, "Slots is required.");
+    if (!slots || !slots.value || slots.value.length < 1) {
+      setError("slots", true, "Slots is required.");
       isValid = false;
     } else {
-      setError("remainingSlots", false, "");
+      setError("slots", false, "");
     }
 
     return isValid;
@@ -172,20 +161,20 @@ const CreateTasks: React.FC<CreateTasksProps> = ({
       helperText: errorState.description.message,
     },
     {
-      id: "price",
-      label: "Price",
+      id: "points",
+      label: "Points",
       placeholder: "5",
       type: "number",
       error: errorState.price.error,
       helperText: errorState.price.message,
     },
     {
-      id: "remainingSlots",
+      id: "slots",
       label: "Slots",
       placeholder: "10",
       type: "number",
-      error: errorState.remainingSlots.error,
-      helperText: errorState.remainingSlots.message,
+      error: errorState.slots.error,
+      helperText: errorState.slots.message,
     },
   ];
 
@@ -247,7 +236,7 @@ const CreateTasks: React.FC<CreateTasksProps> = ({
 
 CreateTasks.propTypes = {
   handleClose: PropTypes.func.isRequired,
-  handleUpdateTaskInfo: PropTypes.func.isRequired,
+  handleCreateTask: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
 };
 
