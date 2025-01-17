@@ -15,7 +15,7 @@ interface ITransaction extends Document {
 const transactionSchema = new mongoose.Schema(
     {
         userId: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
             required: true,
         },
         products: [
