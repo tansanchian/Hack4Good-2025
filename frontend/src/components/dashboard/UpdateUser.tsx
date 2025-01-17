@@ -14,6 +14,7 @@ import {
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid2";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface UserRow {
   id: string;
@@ -118,6 +119,8 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
 
     return isValid;
   };
+
+  const { auth } = useAuth();
 
   const formFieldsLeft = [
     {
@@ -226,6 +229,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
               </FormControl>
             ))}
           </Grid>
+          { selectedUser && auth.id === selectedUser.id ? <></> :
           <Grid size={{ xs: 12, md: 6 }}>
             <Grid sx={{ display: "flex", flexDirection: "column" }}>
               <FormLabel>Actions</FormLabel>
@@ -251,7 +255,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({
                 />
               ))}
             </Grid>
-          </Grid>
+          </Grid> }
         </Grid>
       </DialogContent>
       <DialogActions sx={{ pb: 3, px: 3 }}>

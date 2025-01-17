@@ -204,8 +204,8 @@ const AddNewUser: React.FC<UpdateUserProps> = ({
   ]
 
   const actionsData = [
-    { id: "admin", name: "admin", label: "Admin" },
-    { id: "isActive", name: "isActive", label: "Active" },
+    { id: "admin", name: "admin", label: "Admin", checked: false },
+    { id: "isActive", name: "isActive", label: "Active", checked: true },
   ];
 
   return (
@@ -280,7 +280,7 @@ const AddNewUser: React.FC<UpdateUserProps> = ({
                     <Switch
                       name={action.name}
                       id={action.name}
-                      checked={Boolean(formData[action.name as keyof FormData])}
+                      checked={action.checked}
                       onChange={(e) =>
                         setFormData({
                           ...formData,

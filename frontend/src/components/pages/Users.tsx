@@ -233,7 +233,7 @@ const Users: React.FC = () => {
       width: 150,
       headerAlign: "center",
       align: "center",
-      renderCell: (params) => ( auth.id !== params.id ? (
+      renderCell: (params) => (
         <Box>
           <IconButton
             sx={{
@@ -259,6 +259,7 @@ const Users: React.FC = () => {
           >
             <PasswordRounded fontSize="small" sx={{ color: "green" }} />
           </IconButton>
+          { (auth.id !== params.id) ? 
           <IconButton
             sx={{
               border: "none",
@@ -268,9 +269,9 @@ const Users: React.FC = () => {
             onClick={() => handleClickOpenDelete((params.row as UserRow).id)}
           >
             <DeleteIcon fontSize="small" sx={{ color: "red" }} />
-          </IconButton>
+          </IconButton> : <></> }
         </Box>
-      ) : <></> ),
+      ),
     },
   ];
 
