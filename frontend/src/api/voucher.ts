@@ -18,6 +18,7 @@ const CREATE_API = "/create";
 const ACCEPT_VOUCHER_API = "/acceptVoucher";
 const COMPLETE_VOUCHER_API = "/complete";
 const DELETE_API = "/delete";
+const GET_USER_VOUCHER = "/getUserVoucher";
 const APPROVE_REJECT_VOUCHER_API = "/approveRejectVoucher";
 
 const api = axios.create({
@@ -33,7 +34,6 @@ async function getAvailableVouchers() {
   return await api
     .get(VOUCHERS_BASE)
     .then((response) => {
-      console.log(response);
       const voucherInfo = response.data;
       return {
         status: response.status,
@@ -45,7 +45,52 @@ async function getAvailableVouchers() {
       return {
         status: error.status,
         message: error.response.data.message,
-        voucherInfo: null,
+        voucherInfo: [],
+      };
+    });
+}
+
+async function getAllVoucher() {
+  return await api
+    .get(VOUCHERS_BASE + "/getAllVoucher")
+    .then((response) => {
+      const voucherInfo = response.data;
+      return {
+        status: response.status,
+        message: response.data.message,
+        voucherInfo: voucherInfo,
+      };
+    })
+    .catch((error) => {
+      return {
+        status: error.status,
+        message: error.response.data.message,
+        voucherInfo: [],
+      };
+    });
+}
+
+/**
+ * An async function for sending a create voucher request to the backend.
+ * @param userId
+ * @returns An object containing the HTTP status code of the request and the responded message from the backend.
+ */
+async function getUserVoucher(userId: string) {
+  return await api
+    .post(VOUCHERS_BASE + GET_USER_VOUCHER, { userId })
+    .then((response) => {
+      const voucherInfo = response.data;
+      return {
+        status: response.status,
+        message: response.data.message,
+        voucherInfo: voucherInfo,
+      };
+    })
+    .catch((error) => {
+      return {
+        status: error.status,
+        message: error.response.data.message,
+        voucherInfo: [],
       };
     });
 }
@@ -138,41 +183,43 @@ async function completeVoucher(voucherId: string, userId: string) {
 /**
  * An async function that updates a user's details.
  */
-// async function updateAccount(details: {
-//   id: string;
-//   username?: string;
-//   email?: string;
-//   phoneNumber?: string;
-//   gender?: string;
-//   isActive?: boolean;
-//   newPassword?: string;
-// }) {
-//   const updateAccountData = details;
-//   try {
-//     const response = await api.patch(
-//       USERS_BASE_URL + UPDATE_ACCOUNT_API,
-//       updateAccountData
-//     );
-//     console.log("Successfully updated account!");
-//     return { status: response.status, message: response.data.message };
-//   } catch (error: any) {
-//     console.error("Error when updating account", error);
-//     return {
-//       status: error.response.status,
-//       message: error.response.data.message,
-//     };
-//   }
-// }
+async function updateVoucher(details: {
+  id: string;
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  points?: number;
+  slots?: number;
+}) {
+  const updateVoucher = details;
+  try {
+    const response = await api.patch(VOUCHERS_BASE + "/update", updateVoucher);
+    console.log("Successfully updated voucher!");
+    return { status: response.status, message: response.data.message };
+  } catch (error: any) {
+    console.error("Error when updating voucher", error);
+    return {
+      status: error.response.status,
+      message: error.response.data.message,
+    };
+  }
+}
 
 /**
  * An async function that deletes a user given the user ID.
  */
-async function deleteVoucher(id: string) {
+async function deleteVoucher(voucherId: string) {
+  const voucherCompleteData = {
+    voucherId: voucherId,
+  };
+
   try {
-    const response = await api.delete(VOUCHERS_BASE + DELETE_API + "/" + id);
+    const response = await api.patch(
+      VOUCHERS_BASE + DELETE_API,
+      voucherCompleteData
+    );
     return { status: response.status, message: response.data.message };
   } catch (error: any) {
-    console.error(`Error when deleting voucher ID ${id}\n`, error);
     return {
       status: error.response.status,
       message: error.response.data.message,
@@ -212,8 +259,11 @@ async function approveRejectVoucher(
 export {
   getAvailableVouchers,
   createVoucher,
+  getAllVoucher,
   acceptVoucher,
   completeVoucher,
   deleteVoucher,
   approveRejectVoucher,
+  getUserVoucher,
+  updateVoucher,
 };
