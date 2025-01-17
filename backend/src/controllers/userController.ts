@@ -388,7 +388,7 @@ export async function updateUserPrivilege(req : Request, res : Response) {
   }
 }
 
-export async function getVoucherBalance(req: Request, res: Response) {
+export async function getVouchers(req: Request, res: Response) {
   try {
     const userId = req.params.id;
 
