@@ -2,40 +2,36 @@
 import { Router } from "express";
 
 // Internal project modules
-import { 
-    createUser, 
-    deleteUser, 
-    getAllUsers, 
-    getUser, 
-    updateUser, 
-    updateUserPrivilege,  
-    getVoucherBalance,
-    getCart,
-    getTransactionHistory,
-    getVoucherTasks
-} from '../controllers/userController';
-import { adminProtectRoute, protectRoute } from '../middlewares/protectRoute';
+import {
+  createVoucher,
+  acceptVoucher,
+  getAvailableVouchers,
+  completeVoucher,
+  deleteVoucher,
+  adminApproveRejectVoucher,
+} from "../controllers/voucherController";
+import { adminProtectRoute, protectRoute } from "../middlewares/protectRoute";
 
 const router: Router = Router();
 
 /**
  * @route POST /
- * @description Creates a new user
+ * @description Creates a Voucher
  * @access Public
  *
  * Endpoint to create a new user with the provided username, email, and password.
  * This route is not protected as it is intended for new users to register.
  */
-router.post("/", createUser);
+router.get("/", protectRoute, getAvailableVouchers);
 
 /**
  * @route GET /:id
- * @description Retrieves a specific user by ID
+ * @description Retrieves all voucher
  * @access Protected (Normal User)
  *
  * Requires the user to be authenticated. Returns user data for the given user ID.
  */
-router.get("/:id", protectRoute, getUser);
+router.post("/create", protectRoute, adminProtectRoute, createVoucher);
 
 /**
  * @route GET /
@@ -44,15 +40,7 @@ router.get("/:id", protectRoute, getUser);
  *
  * Requires the user to be authenticated. Returns a list of all users in the database.
  */
-router.get("/", protectRoute, getAllUsers);
-
-router.get('/voucher/:id', protectRoute, getVoucherBalance);
-
-router.get('/cart/:id', protectRoute, getCart);
-
-router.get('/history/:id', protectRoute, getTransactionHistory);
-
-router.get('/tasks/:id', protectRoute, getVoucherTasks);
+router.patch("/acceptVoucher", protectRoute, acceptVoucher);
 
 /**
  * @route PATCH /update
@@ -61,7 +49,7 @@ router.get('/tasks/:id', protectRoute, getVoucherTasks);
  *
  * Requires the user to be authenticated. Allows the user to update their own profile information.
  */
-router.patch("/update", protectRoute, updateUser);
+router.patch("/complete", protectRoute, completeVoucher);
 
 /**
  * @route DELETE /:id
@@ -70,7 +58,7 @@ router.patch("/update", protectRoute, updateUser);
  *
  * Requires the user to be authenticated. Deletes the user with the specified ID.
  */
-router.delete("/:id", protectRoute, deleteUser);
+router.delete("/delete", protectRoute, adminProtectRoute, deleteVoucher);
 
 /**
  * Admin-Protected Routes
@@ -90,10 +78,10 @@ router.delete("/:id", protectRoute, deleteUser);
  * - `isAdmin` (boolean): Specifies whether the user should be granted admin privileges.
  */
 router.patch(
-  "/:id/privilege",
+  "/approveRejectVoucher",
   protectRoute,
   adminProtectRoute,
-  updateUserPrivilege
+  adminApproveRejectVoucher
 );
 
 export default router;

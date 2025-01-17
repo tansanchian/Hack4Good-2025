@@ -7,7 +7,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UpdateInventory from "../dashboard/UpdateInventory";
 import CreateProducts from "../dashboard/CreateProducts";
-import { TroubleshootRounded } from "@mui/icons-material";
 
 interface ItemRow {
   id: string;
