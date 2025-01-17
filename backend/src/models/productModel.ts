@@ -1,4 +1,3 @@
-import e from "cors";
 import mongoose, { Document } from "mongoose";
 
 interface IProduct extends Document {
@@ -14,6 +13,7 @@ const productSchema = new mongoose.Schema(
         name: {
             type: String,
             required: true,
+            unique: true,
         },
         description: {
             type: String,
@@ -29,7 +29,6 @@ const productSchema = new mongoose.Schema(
         },
         imageUrl: {
             type: String,
-            required: true,
         },
     },
     {

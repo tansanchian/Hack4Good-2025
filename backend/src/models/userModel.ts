@@ -1,11 +1,8 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-import Product, { IProduct, productSchema } from "./productModel";
-import Task, { ITask, taskSchema } from "./taskModel";
-import Transaction, {
-  ITransaction,
-  transactionSchema,
-} from "./transactionModel";
+import { IProduct, productSchema } from "./productModel";
+import { ITask, taskSchema } from "./taskModel";
+import { ITransaction, transactionSchema } from "./transactionModel";
 
 /**
  * Interface for the User model, extending Mongoose's Document.
@@ -26,7 +23,6 @@ interface IUser extends Document {
     voucherId: mongoose.Schema.Types.ObjectId;
     status: "pending" | "approval" | "completed" | "cancelled";
   }>;
-  voucher: number;
   cart: IProduct[];
   tasks: ITask[];
   transactionHistory: ITransaction[];
@@ -72,7 +68,7 @@ const userSchema = new mongoose.Schema(
     isAdmin: {
       type: Boolean,
       required: true,
-      default: false,
+      default: true,
     },
     acceptedVouchers: {
       type: [mongoose.Schema.Types.ObjectId], // Store voucher IDs
@@ -89,12 +85,7 @@ const userSchema = new mongoose.Schema(
           }, // Status of the voucher for this user
         },
       ],
-    },
-    default: [],
-    voucher: {
-      type: Number,
-      default: 0,
-      required: false,
+      default: [],
     },
     cart: {
       type: [productSchema],
