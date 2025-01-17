@@ -127,19 +127,26 @@ By automating repetitive tasks and creating a centralized platform, the system s
 
 ## Prototype Components
 
-### Frontend (React.js)
+### Frontend 
 
 - User interface for residents and administrators.
 - Accessible, intuitive design to improve usability.
 
-### Backend (Express.js)
+### Backend 
 
 - Business logic for processing requests.
 - Database integration for storing user and inventory data.
 
-### Database (MongoDB)
+### Database 
 
 - Stores user details, inventory information, and transaction history.
+
+## Tech Stack
+
+- **Frontend**: React.js
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB
+- **Authentication**: JSON Web Tokens (JWT)
 
 ## Potential Impact
 
