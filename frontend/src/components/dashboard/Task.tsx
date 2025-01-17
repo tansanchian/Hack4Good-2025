@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogTitle,
   Button,
+  Snackbar,
 } from "@mui/material";
 import { acceptVoucher } from "../../api/voucher";
 import { useAuth } from "../../contexts/AuthContext";
@@ -19,6 +20,7 @@ interface TaskProps {
   description: string;
   points: number;
   slots: number;
+  onClose: (message : string) => void;
 }
 
 const Task: React.FC<TaskProps> = ({
@@ -28,6 +30,7 @@ const Task: React.FC<TaskProps> = ({
   description,
   points,
   slots,
+  onClose
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const toggleModal = () => setModalOpen(!modalOpen);
@@ -118,14 +121,14 @@ const Task: React.FC<TaskProps> = ({
             onClick={async () => {
               toggleModal();
               const response = await acceptVoucher(_id, auth.id);
-              alert(response.message);
+              onClose(response.message);
             }}
             fullWidth
           >
             Accept Task
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog>     
     </>
   );
 };

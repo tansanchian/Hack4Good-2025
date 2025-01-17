@@ -1,7 +1,7 @@
 import { Row, Col } from "reactstrap";
 import React, { useState, useEffect } from "react";
 import Task from "../dashboard/Task";
-import { Box, Typography, Divider } from "@mui/material";
+import { Box, Typography, Divider, Snackbar } from "@mui/material";
 import { getAvailableVouchers } from "../../api/voucher";
 
 interface TaskDataType {
@@ -19,17 +19,33 @@ interface TaskDataType {
 
 export default function Tasks() {
   const [tasks, setTasks] = useState<TaskDataType[]>([]);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const displaySnackbar = (message : string) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+    console.log(message);
+  }
+
+  // close snackbar/toast
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  }
+
+  const fetchVouchers = async () => {
+    const response = await getAvailableVouchers();
+    setTasks(response.voucherInfo);
+  };
+
   useEffect(() => {
-    const fetchVouchers = async () => {
-      const response = await getAvailableVouchers();
-      setTasks(response.voucherInfo);
-    };
     fetchVouchers();
   }, []);
+
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Task List
+        Voucher Task List
       </Typography>
       <Divider style={{ margin: "16px 0" }} />
       <Box>
@@ -43,17 +59,27 @@ export default function Tasks() {
                 description={item.description}
                 points={item.points}
                 slots={item.slots}
+                onClose={(message) => {
+                  displaySnackbar(message);
+                  fetchVouchers();
+                }}
               />
             </Col>
           ))
         ) : (
           <Col xs="12">
             <Typography variant="body1" color="textSecondary" align="center">
-              Nothing here, Go accept some tasks
+              Nothing here, go accept some tasks
             </Typography>
           </Col>
         )}
-      </Box>
+      </Box> 
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+      />
     </Box>
   );
 }
