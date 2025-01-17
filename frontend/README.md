@@ -12,6 +12,7 @@
   - [Backend Setup](#backend-setup)
 - [Development Workflow](#development-workflow)
 - [Key Features](#key-features)
+- [Solutions](#solutions)
 
 ## Overview
 
@@ -27,7 +28,7 @@ Before setting up the application locally, ensure that the following tools are i
 - Node.js: A JavaScript runtime required to run both the frontend and backend. Download and install it from [here](https://nodejs.org/en).
 - Git: A version control system to clone the repository. Download and install it from [here](https://git-scm.com).
 
-  ## Getting Started
+## Getting Started
 
 Follow these steps to set up the project on your local machine.
 
@@ -102,3 +103,64 @@ You can now begin working on the application, adding features, fixing bugs, or a
 - **Task Approval**: Approve or reject voucher tasks and product requests with detailed tracking.
 - **Inventory Management**: Maintain and update inventory with audit logs for accountability.
 - **Reporting**: Generate comprehensive reports, such as weekly requests and inventory summaries.
+
+## Solutions
+
+Our system solves key challenges faced by the welfare home:
+
+### Efficiency
+
+- Simplifies and streamlines item requests and inventory management.
+
+### Transparency
+
+- Provides detailed logs and reports for accountability and planning.
+
+### Engagement
+
+- The inventory system fosters a sense of community and involvement among residents.
+
+By automating repetitive tasks and creating a centralized platform, the system saves time and reduces errors in resource management.
+
+## Prototype Components
+
+### Frontend (React)
+
+- User interface for residents and administrators.
+- Accessible, intuitive design to improve usability.
+
+### Backend (Express.js)
+
+- Business logic for processing requests.
+- Database integration for storing user and inventory data.
+
+### Database (MongoDB)
+
+- Stores user details, inventory information, and transaction history.
+
+## Potential Impact
+
+### For Residents
+
+- Enhanced accessibility to resources.
+- Empowered with transparency over requests and balances.
+
+### For Administrators
+
+- Streamlined management processes.
+- Improved accountability through comprehensive reporting.
+
+### For the Welfare Home
+
+- Better allocation of resources.
+- Increased resident satisfaction and engagement.
+
+## FAQs
+
+### Who is the intended user of this system?
+
+The system is designed for residents and administrators of the Muhammadiyah Welfare Home.
+
+### Can this system be expanded for other welfare homes?
+
+Yes, the system is modular and can be customized for similar organizations.
