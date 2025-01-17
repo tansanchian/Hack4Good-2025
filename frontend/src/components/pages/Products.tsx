@@ -11,8 +11,7 @@ import Product from "../dashboard/Product";
 interface ProductDataType {
   image: string;
   title: string;
-  subtitle: string;
-  price: string;
+  price: number;
   description: string;
   quantity: number;
 }
@@ -21,8 +20,7 @@ const DEFAULT_PRODUCT_DATA: ProductDataType[] = [
   {
     image: bg1,
     title: "apple",
-    subtitle: "Fresh and juicy",
-    price: "$2.99",
+    price: 2.99,
     description:
       "Our apples are fresh, organic, and sourced from local farms. Perfect for a healthy snack!",
     quantity: 50,
@@ -30,8 +28,7 @@ const DEFAULT_PRODUCT_DATA: ProductDataType[] = [
   {
     image: bg2,
     title: "banana",
-    subtitle: "Sweet and healthy",
-    price: "$1.49",
+    price: 1.49,
     description:
       "Enjoy the sweetness of our bananas, rich in potassium and great for a quick energy boost.",
     quantity: 50,
@@ -39,8 +36,7 @@ const DEFAULT_PRODUCT_DATA: ProductDataType[] = [
   {
     image: bg3,
     title: "orange",
-    subtitle: "Full of vitamin C",
-    price: "$3.19",
+    price: 3.19,
     description:
       "Our oranges are bursting with flavor and packed with Vitamin C to keep you refreshed.",
     quantity: 50,
@@ -48,8 +44,7 @@ const DEFAULT_PRODUCT_DATA: ProductDataType[] = [
   {
     image: bg4,
     title: "grape",
-    subtitle: "Seedless and fresh",
-    price: "$4.50",
+    price: 4.50,
     description:
       "Juicy, seedless grapes that are perfect for snacking or adding to your favorite salads.",
     quantity: 0,
@@ -67,7 +62,6 @@ export default function Products() {
           return {
             image: p.imageUrl,
             title: p.name,
-            subtitle: "",
             price: p.price,
             description: p.description,
             quantity: p.countInStock,
@@ -91,8 +85,8 @@ export default function Products() {
             <Product
               image={item.image}
               title={item.title}
-              subtitle={item.subtitle}
-              price={item.price}
+              subtitle=""
+              price={item.price.toString()}
               description={item.description}
               quantity={item.quantity}
             />
