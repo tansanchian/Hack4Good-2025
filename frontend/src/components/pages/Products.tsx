@@ -1,10 +1,12 @@
 import { Row, Col } from "reactstrap";
 import { Box, Typography } from "@mui/material";
-import Product from "../dashboard/Product";
 import bg1 from "../../assets/bg1.jpg";
 import bg2 from "../../assets/bg2.jpg";
 import bg3 from "../../assets/bg3.jpg";
 import bg4 from "../../assets/bg4.jpg";
+import { useEffect, useState } from "react";
+import { getAllProducts, Product as ProductType } from "../../api/product";
+import Product from "../dashboard/Product";
 
 interface ProductDataType {
   image: string;
@@ -15,7 +17,7 @@ interface ProductDataType {
   quantity: number;
 }
 
-const ProductData: ProductDataType[] = [
+const DEFAULT_PRODUCT_DATA: ProductDataType[] = [
   {
     image: bg1,
     title: "apple",
@@ -55,6 +57,28 @@ const ProductData: ProductDataType[] = [
 ];
 
 export default function Products() {
+  
+  const [productData, setProductData] = useState<ProductDataType[]>(DEFAULT_PRODUCT_DATA);
+  useEffect(() => {
+    getAllProducts().then(response => {
+      if (response.status === 200) {
+        console.log(response);
+        setProductData(response.productInfo.data.map((p: ProductType) => {
+          return {
+            image: p.imageUrl,
+            title: p.name,
+            subtitle: "",
+            price: p.price,
+            description: p.description,
+            quantity: p.countInStock,
+          }
+        }));
+      } else {
+        setProductData(DEFAULT_PRODUCT_DATA);
+      }
+    })
+  }, []);
+
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
@@ -62,7 +86,7 @@ export default function Products() {
       </Typography>
 
       <Row>
-        {ProductData.map((item, index) => (
+        {productData.map((item, index) => (
           <Col xs="12" sm="6" md="4" key={index}>
             <Product
               image={item.image}

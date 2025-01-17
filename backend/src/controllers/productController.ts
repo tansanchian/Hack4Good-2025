@@ -26,9 +26,11 @@ export async function getAllProducts(req: Request, res: Response) {
       const products = await Product.find();
   
       res.status(200).json({ message: `Found products`, data: products });
+      return;
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Unknown error when getting all products!", data: [] });
+      return;
     }
 }
 
@@ -61,6 +63,7 @@ export async function getProduct(req: Request, res: Response) {
       // Validate productID format to ensure it's a valid MongoDB ObjectId
       if (!isValidObjectId(productID)) {
         res.status(404).json({ message: `Product ${productID} not found` });
+        return;
       }
   
       // Attempt to find the product in the database by ID
@@ -69,12 +72,15 @@ export async function getProduct(req: Request, res: Response) {
       // Check if the product exists
       if (!product) {
         res.status(404).json({ message: `Product ${productID} not found` });
+        return;
       } else {
         res.status(200).json({ message: `Found product`, data: product });
+        return;
       }
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Unknown error when getting product!" });
+      return;
     }
 }
 
