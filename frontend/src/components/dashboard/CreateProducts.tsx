@@ -13,10 +13,8 @@ import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid2";
 
 interface ProductRow {
-  id: number;
   title: string;
-  description: number;
-  subtitle: string;
+  description: string;
   image: string;
   price: number;
   quantity: number;
@@ -25,14 +23,12 @@ interface ProductRow {
 interface CreateProductProps {
   open: boolean;
   handleClose: () => void;
-  handleCreateProduct: () => void;
+  handleCreateProduct: (product: FormData) => void;
 }
 
 interface FormData {
-  id: number;
   title: string;
-  description: number;
-  subtitle: string;
+  description: string;
   image: string;
   price: number;
   quantity: number;
@@ -48,10 +44,8 @@ const CreateProducts: React.FC<CreateProductProps> = ({
   handleCreateProduct,
 }) => {
   const [formData, setFormData] = useState<FormData>({
-    id: 0,
     title: "",
-    description: 0,
-    subtitle: "",
+    description: "",
     image: "",
     price: 0,
     quantity: 0,
@@ -60,10 +54,8 @@ const CreateProducts: React.FC<CreateProductProps> = ({
   useEffect(() => {
     if (open) {
       setFormData({
-        id: 0,
         title: "",
-        description: 0,
-        subtitle: "",
+        description: "",
         image: "",
         price: 0,
         quantity: 0,
@@ -72,7 +64,6 @@ const CreateProducts: React.FC<CreateProductProps> = ({
       setErrorState({
         title: { error: false, message: "" },
         description: { error: false, message: "" },
-        subtitle: { error: false, message: "" },
         image: { error: false, message: "" },
         price: { error: false, message: "" },
         quantity: { error: false, message: "" },
@@ -83,7 +74,6 @@ const CreateProducts: React.FC<CreateProductProps> = ({
   const [errorState, setErrorState] = useState<ErrorState>({
     title: { error: false, message: "" },
     description: { error: false, message: "" },
-    subtitle: { error: false, message: "" },
     image: { error: false, message: "" },
     price: { error: false, message: "" },
     quantity: { error: false, message: "" },
@@ -92,7 +82,7 @@ const CreateProducts: React.FC<CreateProductProps> = ({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (validateInputs()) {
-      handleCreateProduct();
+      handleCreateProduct(formData);
     }
   };
 
@@ -108,7 +98,6 @@ const CreateProducts: React.FC<CreateProductProps> = ({
     const description = document.getElementById(
       "description"
     ) as HTMLInputElement;
-    const subtitle = document.getElementById("subtitle") as HTMLInputElement;
     const price = document.getElementById("price") as HTMLInputElement;
     const quantity = document.getElementById("quantity") as HTMLInputElement;
     let isValid = true;
@@ -118,12 +107,6 @@ const CreateProducts: React.FC<CreateProductProps> = ({
       isValid = false;
     } else {
       setError("title", false, "");
-    }
-    if (!subtitle || !subtitle.value || subtitle.value.length < 1) {
-      setError("subtitle", true, "Subtitle is required.");
-      isValid = false;
-    } else {
-      setError("subtitle", false, "");
     }
     if (!description || !description.value || description.value.length < 1) {
       setError("description", true, "Description is required.");
@@ -154,13 +137,6 @@ const CreateProducts: React.FC<CreateProductProps> = ({
       placeholder: "Apple",
       error: errorState.title.error,
       helperText: errorState.title.message,
-    },
-    {
-      id: "subtitle",
-      label: "Subtitle",
-      placeholder: "Fresh Fruits",
-      error: errorState.subtitle.error,
-      helperText: errorState.subtitle.message,
     },
     {
       id: "description",

@@ -12,6 +12,26 @@ import {
 } from "@mui/material";
 import { getAvailableVouchers, approveRejectVoucher } from "../../api/voucher";
 
+interface UserStatus {
+  userId: string;
+  status: string;
+}
+
+interface Voucher {
+  _id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  points: number;
+  userStatuses: UserStatus[];
+}
+
+interface VoucherTask {
+  voucherId: Voucher;
+  userId: string;
+  status: string;
+}
+
 const VoucherApprovalReject = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [successMessage, setSuccessMessage] = useState("");
@@ -21,8 +41,8 @@ const VoucherApprovalReject = () => {
     const fetchVouchers = async () => {
       const response = await getAvailableVouchers();
       const data = response.voucherInfo;
-      const modifiedData = data.flatMap((x) =>
-        x.userStatuses.flatMap((y) => ({
+      const modifiedData: VoucherTask[] = data.flatMap((x: Voucher) =>
+        x.userStatuses.flatMap((y: UserStatus) => ({
           voucherId: { ...x },
           ...y,
         }))
@@ -47,8 +67,8 @@ const VoucherApprovalReject = () => {
       // Refetch vouchers after approval/rejection
       const response = await getAvailableVouchers();
       const data = response.voucherInfo;
-      const modifiedData = data.flatMap((x) =>
-        x.userStatuses.flatMap((y) => ({
+      const modifiedData: VoucherTask[] = data.flatMap((x: Voucher) =>
+        x.userStatuses.flatMap((y: UserStatus) => ({
           voucherId: { ...x },
           ...y,
         }))
@@ -72,7 +92,12 @@ const VoucherApprovalReject = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: { sm: "100%", md: "1700px" },
+      }}
+    >
       <Typography component="h2" variant="h5" sx={{ mb: 2 }}>
         Voucher Approval System
       </Typography>

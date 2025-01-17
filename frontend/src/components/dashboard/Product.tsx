@@ -2,14 +2,17 @@ import { Snackbar } from "@mui/material";
 import React, { useState } from "react";
 import {
   Card,
-  CardBody,
-  CardImg,
-  CardTitle,
-  Modal,
-  ModalHeader,
-  ModalBody,
+  CardContent,
+  CardMedia,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Button,
-} from "reactstrap";
+  Box,
+} from "@mui/material";
+
 import { createTransaction, fetchUserCart, updateTransaction } from "../../api/transaction";
 import { useAuth } from "../../contexts/AuthContext";
 import { ProductAmount } from "../pages/home";
@@ -22,7 +25,6 @@ interface ProductProps {
   price: string;
   description: string;
   quantity: number;
-  href?: string;
 }
 
 const Product: React.FC<ProductProps> = ({
@@ -102,85 +104,102 @@ const Product: React.FC<ProductProps> = ({
     <>
       {/* Main Product Card */}
       <Card
-        style={{
+        sx={{
           cursor: "pointer",
           border: "1px solid #eee",
-          borderRadius: "8px",
-          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-          marginBottom: "16px",
-          transition: "transform 0.2s ease, boxShadow 0.2s ease",
+          borderRadius: 2,
+          boxShadow: 2,
+          mb: 2,
+          transition: "transform 0.2s ease, box-shadow 0.2s ease",
+          "&:hover": {
+            transform: "translateY(-2px)",
+            boxShadow: 3,
+          },
         }}
         onClick={toggleModal}
-        onMouseEnter={(e: React.MouseEvent) => {
-          const target = e.currentTarget as HTMLDivElement;
-          target.style.transform = "translateY(-2px)";
-          target.style.boxShadow = "0 4px 8px rgba(0,0,0,0.15)";
-        }}
-        onMouseLeave={(e: React.MouseEvent) => {
-          const target = e.currentTarget as HTMLDivElement;
-          target.style.transform = "translateY(0)";
-          target.style.boxShadow = "0 2px 4px rgba(0,0,0,0.1)";
-        }}
       >
-        <CardImg
-          top
-          src={image}
+        <CardMedia
+          component="img"
+          height="200"
+          image={image}
           alt={title}
-          style={{
-            height: "150px",
-            width: "100%",
-            objectFit: "cover",
+          sx={{
+            objectFit: "fit",
           }}
         />
-        <CardBody>
-          <CardTitle tag="h5">
-            {title} <span style={{ color: "#007bff", fontSize: "14px" }}>{price}</span>
-          </CardTitle>
-          <p style={{ fontSize: "14px", color: "#666" }}>{subtitle}</p>
-        </CardBody>
+        <CardContent>
+          <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
+            Price: {price}
+            <Typography
+              variant="body2"
+              sx={{
+                fontWeight: "bold",
+                color: quantity > 0 ? "green" : "red",
+              }}
+            >
+              Quantity: {quantity > 0 ? quantity : "Out of stock"}
+            </Typography>
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontSize: "14px" }}
+          >
+            {subtitle}
+          </Typography>
+        </CardContent>
       </Card>
 
       {/* Modal */}
-      <Modal isOpen={modalOpen} toggle={toggleModal} centered>
-        <ModalHeader toggle={toggleModal}>{title}</ModalHeader>
-        <ModalBody>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <CardImg
-              top
-              src={image}
+      <Dialog open={modalOpen} onClose={toggleModal} fullWidth>
+        <DialogTitle>{title}</DialogTitle>
+        <DialogContent>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <CardMedia
+              component="img"
+              height="300"
+              image={image}
               alt={title}
-              style={{
-                height: "200px",
-                width: "60%",
-                objectFit: "cover",
-                marginBottom: "16px",
+              sx={{
+                objectFit: "fit",
+                mb: 2,
+                width: "100%",
               }}
             />
-            <div style={{ textAlign: "right", width: "35%" }}>
-              <p
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  color: quantity > 0 ? "green" : "red",
-                }}
-              >
-                Quantity: {quantity > 0 ? quantity : "Out of stock"}
-              </p>
-            </div>
-          </div>
-          <p style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "8px" }}>
+          </Box>
+          <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
             Price: {price}
-          </p>
-          <p style={{ fontSize: "14px", color: "#666" }}>{description}</p>
+            <Typography
+              variant="body2"
+              sx={{
+                fontWeight: "bold",
+                color: quantity > 0 ? "green" : "red",
+              }}
+            >
+              Quantity: {quantity > 0 ? quantity : "Out of stock"}
+            </Typography>
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {description}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
           <Button
-            color="primary"
-            style={{ marginTop: "16px", display: "block", width: "100%" }}
+            variant="contained"
+            color={quantity > 0 ? "primary" : "secondary"}
+            sx={{ width: "100%" }}
             onClick={handleAddToCart}
           >
             {quantity > 0 ? "Add to Cart" : "Preorder"}
           </Button>
-        </ModalBody>
-      </Modal>
+        </DialogActions>
+      </Dialog>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

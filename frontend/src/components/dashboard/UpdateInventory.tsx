@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  MenuItem,
 } from "@mui/material";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
@@ -15,13 +14,11 @@ import Grid from "@mui/material/Grid2";
 
 interface InventoryRow {
   id: string;
-  name: string;
+  image: string;
+  title: string;
+  price: number;
   description: string;
-  photoURL: string;
-  category: string;
-  quantity: string;
-  price: string;
-  preorder: string;
+  quantity: number;
 }
 
 interface UpdateInventoryProps {
@@ -33,13 +30,11 @@ interface UpdateInventoryProps {
 
 interface FormData {
   id: string;
-  name: string;
+  image: string;
+  title: string;
+  price: number;
   description: string;
-  photoURL: string;
-  category: string;
-  quantity: string;
-  price: string;
-  preorder: string;
+  quantity: number;
 }
 
 interface ErrorState {
@@ -54,13 +49,11 @@ const UpdateInventory: React.FC<UpdateInventoryProps> = ({
 }) => {
   const [formData, setFormData] = useState<FormData>({} as FormData);
   const [errorState, setErrorState] = useState<ErrorState>({
-    name: { error: false, message: "" },
+    title: { error: false, message: "" },
     description: { error: false, message: "" },
-    photoURL: { error: false, message: "" },
-    category: { error: false, message: "" },
+    image: { error: false, message: "" },
     quantity: { error: false, message: "" },
     price: { error: false, message: "" },
-    preorder: { error: false, message: "" },
   });
 
   useEffect(() => {
@@ -84,14 +77,14 @@ const UpdateInventory: React.FC<UpdateInventoryProps> = ({
   };
 
   const validateInputs = (): boolean => {
-    const name = document.getElementById("name") as HTMLInputElement;
+    const title = document.getElementById("title") as HTMLInputElement;
     let isValid = true;
 
-    if (!name.value || name.value.length < 1) {
-      setError("name", true, "Name is required.");
+    if (!title.value || title.value.length < 1) {
+      setError("title", true, "Title is required.");
       isValid = false;
     } else {
-      setError("name", false, "");
+      setError("title", false, "");
     }
 
     return isValid;
@@ -99,12 +92,12 @@ const UpdateInventory: React.FC<UpdateInventoryProps> = ({
 
   const formFieldsLeft = [
     {
-      id: "name",
-      label: "Full name",
+      id: "title",
+      label: "Title",
       placeholder: "Jon Snow",
-      value: formData.name,
-      error: errorState.name.error,
-      helperText: errorState.name.message,
+      value: formData.title,
+      error: errorState.title.error,
+      helperText: errorState.title.message,
     },
     {
       id: "description",
@@ -115,20 +108,12 @@ const UpdateInventory: React.FC<UpdateInventoryProps> = ({
       helperText: errorState.description.message,
     },
     {
-      id: "photoURL",
+      id: "image",
       label: "Photo",
-      value: formData.photoURL,
+      value: formData.image,
       placeholder: "12345678",
-      error: errorState.photoURL.error,
-      helperText: errorState.photoURL.message,
-    },
-    {
-      id: "category",
-      label: "Category",
-      value: formData.category,
-      placeholder: "12345678",
-      error: errorState.category.error,
-      helperText: errorState.category.message,
+      error: errorState.image.error,
+      helperText: errorState.image.message,
     },
     {
       id: "quantity",
@@ -148,15 +133,6 @@ const UpdateInventory: React.FC<UpdateInventoryProps> = ({
       error: errorState.price.error,
       helperText: errorState.price.message,
     },
-    {
-      id: "preorder",
-      label: "Preorder",
-      type: "number",
-      value: formData.preorder,
-      placeholder: "Preorder quantity",
-      error: errorState.preorder?.error || false,
-      helperText: errorState.preorder?.message || "",
-    }
   ];
 
   return (
@@ -176,53 +152,43 @@ const UpdateInventory: React.FC<UpdateInventoryProps> = ({
       }}
     >
       <DialogTitle id="user-dialog-title">Item Details</DialogTitle>
-      <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <Grid container spacing={5}>
-          <Grid size={{ xs: 12, md: 6 }}>
-            {formFieldsLeft.map((field) => (
-              <FormControl key={field.id} fullWidth sx={{ marginBottom: 2 }}>
-                <FormLabel htmlFor={field.id}>{field.label}</FormLabel>
-                {field.type === "select" ? (
-                  <TextField
-                    required
-                    id={field.id}
-                    name={field.id}
-                    select
-                    value={field.value}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setFormData({ ...formData, [field.id]: e.target.value })
-                    }
-                    fullWidth
-                  >
-                    {field.options.map(
-                      (option: { value: string; label: string }) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      )
-                    )}
-                  </TextField>
-                ) : (
-                  <TextField
-                    autoComplete={field.id}
-                    name={field.id}
-                    id={field.id}
-                    fullWidth
-                    variant="outlined"
-                    value={field.value}
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    onChange={(e) =>
-                      setFormData({ ...formData, [field.id]: e.target.value })
-                    }
-                    error={field.error}
-                    helperText={field.helperText}
-                    color={field.error ? "error" : "primary"}
-                  />
-                )}
-              </FormControl>
-            ))}
-          </Grid>
+      <DialogContent sx={{ display: "flex", gap: 2 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
+          {formFieldsLeft.map((field) => (
+            <FormControl key={field.id} fullWidth sx={{ marginBottom: 2 }}>
+              <FormLabel htmlFor={field.id}>{field.label}</FormLabel>
+              {field.type === "select" ? (
+                <TextField
+                  required
+                  id={field.id}
+                  name={field.id}
+                  select
+                  value={field.value}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormData({ ...formData, [field.id]: e.target.value })
+                  }
+                  fullWidth
+                ></TextField>
+              ) : (
+                <TextField
+                  autoComplete={field.id}
+                  name={field.id}
+                  id={field.id}
+                  fullWidth
+                  variant="outlined"
+                  value={field.value}
+                  type={field.type}
+                  placeholder={field.placeholder}
+                  onChange={(e) =>
+                    setFormData({ ...formData, [field.id]: e.target.value })
+                  }
+                  error={field.error}
+                  helperText={field.helperText}
+                  color={field.error ? "error" : "primary"}
+                />
+              )}
+            </FormControl>
+          ))}
         </Grid>
       </DialogContent>
       <DialogActions sx={{ pb: 3, px: 3 }}>
@@ -241,13 +207,11 @@ UpdateInventory.propTypes = {
   open: PropTypes.bool.isRequired,
   selectedItem: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    photoURL: PropTypes.string.isRequired,
-    category: PropTypes.string.isRequired,
-    quantity: PropTypes.string.isRequired,
-    price: PropTypes.string.isRequired,
-    preorder: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+    quantity: PropTypes.number.isRequired,
+    price: PropTypes.number.isRequired,
   }),
 };
 
