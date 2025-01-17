@@ -57,8 +57,8 @@ export default function MenuContent() {
 
   const secondaryListItems = [
     { text: "Settings", icon: <SettingsRoundedIcon /> },
-    { text: "About", icon: <InfoRoundedIcon /> },
-    { text: "Feedback", icon: <HelpRoundedIcon /> },
+    // { text: "About", icon: <InfoRoundedIcon /> },
+    // { text: "Feedback", icon: <HelpRoundedIcon /> },
   ];
 
   const { auth } = useAuth();
