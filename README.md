@@ -13,6 +13,9 @@
 - [Development Workflow](#development-workflow)
 - [Key Features](#key-features)
 - [Solutions](#solutions)
+- [Prototype Components](#prototype-components)
+- [Potential Impact](#potential-impact)
+- [FAQs](#faqs)
 
 ## Overview
 
