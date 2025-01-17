@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "reactstrap";
-import { Box, Typography, Button, Divider } from "@mui/material";
+import { Box, Typography, Button, Divider, Snackbar } from "@mui/material";
 import EditableTask from "../dashboard/EditableTask";
 import UpdateTasks from "../dashboard/UpdateTasks";
 import CreateTasks from "../dashboard/CreateTasks";
@@ -34,15 +34,35 @@ export default function ManageTasks() {
   const [openUpdate, setOpenUpdate] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState<TaskDataType | null>(null);
   const [openCreate, setOpenCreate] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const displaySnackbar = (message : string) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+    console.log(message);
+  }
+
+  // close snackbar/toast
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  }
 
   const handleCreateTask = async (createTask: TaskRowCreate) => {
-    await createVoucher(
+    const response = await createVoucher(
       createTask.title,
       createTask.subtitle,
       createTask.description,
       createTask.points,
       createTask.slots
     );
+
+    if (response.status === 200 || response.status === 201) {
+      displaySnackbar("Voucher task created successfully!");
+    } else {
+      displaySnackbar("There was an error in creating the task: " + response.message);
+    }
+
     handleCloseCreate();
   };
 
@@ -82,7 +102,7 @@ export default function ManageTasks() {
 
   const handleUpdateTaskInfo = async (updatedTask: TaskDataType) => {
     handleCloseUpdate();
-    await updateVoucher({
+    const response = await updateVoucher({
       id: updatedTask._id,
       title: updatedTask.title,
       subtitle: updatedTask.subtitle,
@@ -90,6 +110,12 @@ export default function ManageTasks() {
       points: updatedTask.points,
       slots: updatedTask.slots,
     });
+
+    if (response.status === 200 || response.status === 201) {
+      displaySnackbar("Voucher task updated successfully!");
+    } else {
+      displaySnackbar("There was an error in updating the task: " + response.message);
+    }
   };
 
   return (
@@ -127,7 +153,7 @@ export default function ManageTasks() {
         ) : (
           <Col xs="12">
             <Typography variant="body1" color="textSecondary" align="center">
-              Nothing here, Create Tasks
+              Nothing here, create some tasks!
             </Typography>
           </Col>
         )}
@@ -146,6 +172,12 @@ export default function ManageTasks() {
         open={openCreate}
         handleClose={handleCloseCreate}
         handleCreateTask={handleCreateTask}
+      />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
       />
     </Box>
   );

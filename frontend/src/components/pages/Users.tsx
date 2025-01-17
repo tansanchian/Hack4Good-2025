@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Button, IconButton, Stack } from "@mui/material";
+import { Button, IconButton, Snackbar, Stack } from "@mui/material";
 import { DataGrid, GridRowClassNameParams, GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -51,6 +51,19 @@ const Users: React.FC = () => {
     useState<UserPassword | null>(null);
   const [loading, setLoading] = useState(false);
   const { auth } = useAuth();
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const displaySnackbar = (message : string) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+    console.log(message);
+  }
+
+  // close snackbar/toast
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  }
 
   const handleClickOpenUpdate = (row: UserRow) => {
     setLoading(true);
@@ -95,11 +108,11 @@ const Users: React.FC = () => {
   const handleAddUserInfo = (newUser: UserRowPassword) => {
     createNewUser(newUser).then(response => {
       if (response.status === 201) {
-        console.log("User created successfully");
+        displaySnackbar("User created successfully");
         console.log("FULL RESPONSE: ", response);
         updateRows();
       } else {
-        console.error("User creation failed: ", response.message);
+        displaySnackbar("User creation failed: " + response.message);
         updateRows();
       }
     });
@@ -112,9 +125,9 @@ const Users: React.FC = () => {
     // update admin privileges of user in backend
     updateUserPrivilege(updatedUser.id, updatedUser.admin).then((response) => {
       if (response.status === 200) {
-        console.log("User permissions change successful");
+        displaySnackbar("User permissions change successful");
       } else {
-        console.error("User permissions change failed: ", response.message);
+        displaySnackbar("User permissions change failed: " + response.message);
       }
     });
 
@@ -128,9 +141,9 @@ const Users: React.FC = () => {
       isActive: updatedUser.isActive,
     }).then((response) => {
       if (response.status === 200) {
-        console.log("User update successful");
+        displaySnackbar("User update successful");
       } else {
-        console.error("User update failed: ", response.message);
+        displaySnackbar("User update failed: " + response.message);
       }
     });
   };
@@ -139,17 +152,15 @@ const Users: React.FC = () => {
     handleCloseUpdate();
     setSelectedUserPassword(updatedUser);
 
-    console.log(updatedUser.newPassword);
-
     // update user password in backend
     updateAccount({
       id: updatedUser.id,
       newPassword: updatedUser.newPassword,
     }).then((response) => {
       if (response.status === 200) {
-        console.log("User update successful");
+        displaySnackbar("User update successful");
       } else {
-        console.error("User update failed: ", response.message);
+        displaySnackbar("User update failed: " + response.message);
       }
     });
   };
@@ -159,9 +170,9 @@ const Users: React.FC = () => {
 
     deleteAccount(id).then((response) => {
       if (response.status === 200) {
-        console.log("Deletion successful");
+        displaySnackbar("User deletion successful");
       } else {
-        console.error("Deletion failed");
+        displaySnackbar("User deletion failed");
       }
       updateRows();
     });
@@ -302,6 +313,12 @@ const Users: React.FC = () => {
           selectedUser={selectedUserPassword}
         />
       )}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+      />
     </Box>
   );
 };
