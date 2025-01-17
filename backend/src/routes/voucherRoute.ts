@@ -9,10 +9,22 @@ import {
   completeVoucher,
   deleteVoucher,
   adminApproveRejectVoucher,
+  updateVoucher,
+  getUserVoucher,
+  getAllVoucher,
 } from "../controllers/voucherController";
 import { adminProtectRoute, protectRoute } from "../middlewares/protectRoute";
 
 const router: Router = Router();
+/**
+ * @route GET /
+ * @description Retrieves all voucher
+ * @access Protected (Normal User)
+ *
+ * Requires the user to be authenticated. Returns user data for the given user ID.
+ */
+router.get("/", protectRoute, getAvailableVouchers);
+router.get("/getAllVoucher", protectRoute, adminProtectRoute, getAllVoucher);
 
 /**
  * @route POST /
@@ -22,16 +34,16 @@ const router: Router = Router();
  * Endpoint to create a new user with the provided username, email, and password.
  * This route is not protected as it is intended for new users to register.
  */
-router.get("/", getAvailableVouchers);
+router.post("/create", protectRoute, adminProtectRoute, createVoucher);
 
 /**
- * @route GET /:id
+ * @route GET /getUserVoucher
  * @description Retrieves all voucher
  * @access Protected (Normal User)
  *
  * Requires the user to be authenticated. Returns user data for the given user ID.
  */
-router.post("/create", createVoucher);
+router.post("/getUserVoucher", getUserVoucher);
 
 /**
  * @route GET /
@@ -58,7 +70,8 @@ router.patch("/complete", protectRoute, completeVoucher);
  *
  * Requires the user to be authenticated. Deletes the user with the specified ID.
  */
-router.delete("/delete", protectRoute, adminProtectRoute, deleteVoucher);
+router.patch("/delete", protectRoute, adminProtectRoute, deleteVoucher);
+router.patch("/update", protectRoute, adminProtectRoute, updateVoucher);
 
 /**
  * Admin-Protected Routes

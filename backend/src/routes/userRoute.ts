@@ -12,7 +12,8 @@ import {
     getVouchers,
     getCart,
     getTransactionHistory,
-    getVoucherTasks
+    getVoucherTasks,
+    createUserAdmin
 } from '../controllers/userController';
 import { adminProtectRoute, protectRoute } from '../middlewares/protectRoute';
 
@@ -27,6 +28,15 @@ const router: Router = Router();
  * This route is not protected as it is intended for new users to register.
  */
 router.post("/", createUser);
+
+/**
+ * @route POST /new
+ * @description Creates a new user
+ * @access Protected (Admin Only)
+ *
+ * Endpoint to allow admins to create a new user.
+ */
+router.post("/new", protectRoute, adminProtectRoute, createUserAdmin);
 
 /**
  * @route GET /:id

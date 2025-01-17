@@ -7,9 +7,6 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  MenuItem,
-  Switch,
-  FormControlLabel,
 } from "@mui/material";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
@@ -98,7 +95,7 @@ const UpdateUser: React.FC<UpdateUserPasswordProps> = ({
     {
       id: "newPassword",
       label: "New Password",
-      placeholder: "●●●●●●",
+      placeholder: "●●●●●●●●",
       type: "password",
       value: formData.newPassword,
       error: errorState.newPassword.error,
@@ -107,7 +104,7 @@ const UpdateUser: React.FC<UpdateUserPasswordProps> = ({
     {
       id: "confirmPassword",
       label: "Confirm Password",
-      placeholder: "●●●●●●",
+      placeholder: "●●●●●●●●",
       type: "password",
       value: formData.confirmPassword,
       error: errorState.confirmPassword.error,

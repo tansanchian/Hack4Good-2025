@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { IconButton } from "@mui/material";
+import { Button, IconButton, Snackbar, Stack } from "@mui/material";
 import { DataGrid, GridRowClassNameParams, GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { deleteAccount, getUsers, updateAccount, updateUserPrivilege } from "../../api/user";
+import { createNewUser, deleteAccount, getUsers, updateAccount, updateUserPrivilege } from "../../api/user";
 import { useAuth } from "../../contexts/AuthContext";
 import { PasswordRounded } from "@mui/icons-material";
-import UpdateUserPassword from "../UpdateUserPassword";
+import UpdateUserPassword from "../dashboard/UpdateUserPassword";
 import UpdateUser from "../dashboard/UpdateUser";
+import AddNewUser from "../dashboard/AddNewUser";
 
 interface UserRow {
   id: string;
@@ -28,13 +29,41 @@ interface UserPassword {
   confirmPassword: string;
 }
 
+export interface UserRowPassword {
+  id: string;
+  name: string;
+  email: string;
+  voucher: string;
+  sex: string;
+  admin: boolean;
+  phonenumber: string;
+  isActive: boolean;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 const Users: React.FC = () => {
+  const [openAdd, setOpenAdd] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openUpdatePassword, setOpenUpdatePassword] = useState(false);
   const [selectedUser, setSelectedUser] = useState<UserRow | null>(null);
-  const [selectedUserPassword, setSelectedUserPassword] = useState<UserPassword | null>(null);
+  const [selectedUserPassword, setSelectedUserPassword] =
+    useState<UserPassword | null>(null);
   const [loading, setLoading] = useState(false);
   const { auth } = useAuth();
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const displaySnackbar = (message : string) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+    console.log(message);
+  }
+
+  // close snackbar/toast
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  }
 
   const handleClickOpenUpdate = (row: UserRow) => {
     setLoading(true);
@@ -54,7 +83,7 @@ const Users: React.FC = () => {
       setSelectedUserPassword(row);
       setLoading(false);
     }, 0);
-  }
+  };
 
   useEffect(() => {
     if (selectedUser && Object.keys(selectedUser).length > 0) {
@@ -69,25 +98,36 @@ const Users: React.FC = () => {
   }, [selectedUserPassword]);
 
   const handleCloseUpdate = () => {
+    setOpenAdd(false);
     setOpenUpdate(false);
     setOpenUpdatePassword(false);
     setSelectedUser(null);
     setSelectedUserPassword(null);
   };
 
+  const handleAddUserInfo = (newUser: UserRowPassword) => {
+    createNewUser(newUser).then(response => {
+      if (response.status === 201) {
+        displaySnackbar("User created successfully");
+        console.log("FULL RESPONSE: ", response);
+        updateRows();
+      } else {
+        displaySnackbar("User creation failed: " + response.message);
+        updateRows();
+      }
+    });
+  }
+
   const handleUpdateUserInfo = (updatedUser: UserRow) => {
     handleCloseUpdate();
     setSelectedUser(updatedUser);
 
     // update admin privileges of user in backend
-    updateUserPrivilege(
-      updatedUser.id,
-      updatedUser.admin
-    ).then(response => {
+    updateUserPrivilege(updatedUser.id, updatedUser.admin).then((response) => {
       if (response.status === 200) {
-        console.log("User permissions change successful");
+        displaySnackbar("User permissions change successful");
       } else {
-        console.error("User permissions change failed: ", response.message);
+        displaySnackbar("User permissions change failed: " + response.message);
       }
     });
 
@@ -98,12 +138,12 @@ const Users: React.FC = () => {
       email: updatedUser.email,
       phoneNumber: updatedUser.phonenumber,
       gender: updatedUser.sex,
-      isActive: updatedUser.isActive
-    }).then(response => {
+      isActive: updatedUser.isActive,
+    }).then((response) => {
       if (response.status === 200) {
-        console.log("User update successful");
+        displaySnackbar("User update successful");
       } else {
-        console.error("User update failed: ", response.message);
+        displaySnackbar("User update failed: " + response.message);
       }
     });
   };
@@ -112,17 +152,15 @@ const Users: React.FC = () => {
     handleCloseUpdate();
     setSelectedUserPassword(updatedUser);
 
-    console.log(updatedUser.newPassword);
-
     // update user password in backend
     updateAccount({
       id: updatedUser.id,
-      newPassword: updatedUser.newPassword
-    }).then(response => {
+      newPassword: updatedUser.newPassword,
+    }).then((response) => {
       if (response.status === 200) {
-        console.log("User update successful");
+        displaySnackbar("User update successful");
       } else {
-        console.error("User update failed: ", response.message);
+        displaySnackbar("User update failed: " + response.message);
       }
     });
   };
@@ -130,60 +168,17 @@ const Users: React.FC = () => {
   const handleClickOpenDelete = (id: string) => {
     console.log("Delete user with id:", id);
 
-    deleteAccount(id).then(response => {
+    deleteAccount(id).then((response) => {
       if (response.status === 200) {
-        console.log("Deletion successful");
+        displaySnackbar("User deletion successful");
       } else {
-        console.error("Deletion failed");
+        displaySnackbar("User deletion failed");
       }
       updateRows();
-    })
+    });
   };
 
-  const DEFAULT_ROWS: UserRow[] = [
-    {
-      id: "1",
-      name: "John Doe",
-      email: "john.doe@example.com",
-      voucher: "ABC123",
-      phonenumber: "1234567890",
-      sex: "Female",
-      admin: false,
-      isActive: true,
-    },
-    {
-      id: "2",
-      name: "Jane Smith",
-      email: "jane.smith@example.com",
-      voucher: "XYZ456",
-      phonenumber: "1234567890",
-      sex: "Female",
-      admin: true,
-      isActive: true,
-    },
-    {
-      id: "3",
-      name: "Alice Johnson",
-      email: "alice.johnson@example.com",
-      voucher: "LMN789",
-      phonenumber: "1234567890",
-      sex: "Male",
-      admin: true,
-      isActive: true,
-    },
-    {
-      id: "4",
-      name: "Bob Brown",
-      email: "bob.brown@example.com",
-      voucher: "OPQ012",
-      phonenumber: "1234567890",
-      sex: "Male",
-      admin: true,
-      isActive: true,
-    },
-  ];
-
-  const [ rows, setRows ] = useState<UserRow[]>(DEFAULT_ROWS);
+  const [rows, setRows] = useState<UserRow[]>([]);
 
   const columns: GridColDef[] = [
     { field: "name", headerName: "Name", editable: false, width: 150 },
@@ -204,7 +199,7 @@ const Users: React.FC = () => {
       width: 150,
       headerAlign: "center",
       align: "center",
-      renderCell: (params) => ( auth.id !== params.id ? (
+      renderCell: (params) => (
         <Box>
           <IconButton
             sx={{
@@ -230,6 +225,7 @@ const Users: React.FC = () => {
           >
             <PasswordRounded fontSize="small" sx={{ color: "green" }} />
           </IconButton>
+          { (auth.id !== params.id) ? 
           <IconButton
             sx={{
               border: "none",
@@ -239,42 +235,49 @@ const Users: React.FC = () => {
             onClick={() => handleClickOpenDelete((params.row as UserRow).id)}
           >
             <DeleteIcon fontSize="small" sx={{ color: "red" }} />
-          </IconButton>
+          </IconButton> : <></> }
         </Box>
-      ) : <></> ),
+      ),
     },
   ];
 
   const updateRows = () => {
-    getUsers().then(response => {
+    getUsers().then((response) => {
       if (response.status === 200) {
-        setRows(response.data.map((row : any) => {
-          return {
-            id: row._id,
-            name: row.username,
-            email: row.email,
-            voucher: row.voucher,
-            phonenumber: row.phoneNumber,
-            sex: row.gender,
-            admin: row.isAdmin,
-            isActive: row.isActive,
-          } as UserRow
-        }));
+        setRows(
+          response.data.map((row: any) => {
+            return {
+              id: row._id,
+              name: row.username,
+              email: row.email,
+              voucher: row.voucher,
+              phonenumber: row.phoneNumber,
+              sex: row.gender,
+              admin: row.isAdmin,
+              isActive: row.isActive,
+            } as UserRow;
+          })
+        );
       } else {
         console.error("Could not fetch users!");
-        setRows(DEFAULT_ROWS);
+        setRows([]);
       }
-    })
-  }
+    });
+  };
 
   // get users from database
   useEffect(updateRows, [openUpdate, openUpdatePassword]);
 
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Manage Users
-      </Typography>
+      <Stack direction="row" display="flex" alignItems="center" sx={{ mb: 2 }}>
+        <Typography flexGrow="1" component="h2" variant="h6">
+          Manage Users
+        </Typography>
+        <Button variant="outlined" onClick={() => setOpenAdd(true)}>
+          Add New User
+        </Button>
+      </Stack>
       <DataGrid
         checkboxSelection
         rows={rows}
@@ -287,6 +290,12 @@ const Users: React.FC = () => {
             backgroundColor: "secondary.main",
           },
         }}
+      />
+      <AddNewUser
+        open={openAdd}
+        handleClose={handleCloseUpdate}
+        handleUpdateUserInfo={handleAddUserInfo}
+        selectedUser={null}
       />
       {selectedUser && (
         <UpdateUser
@@ -304,6 +313,12 @@ const Users: React.FC = () => {
           selectedUser={selectedUserPassword}
         />
       )}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+      />
     </Box>
   );
 };

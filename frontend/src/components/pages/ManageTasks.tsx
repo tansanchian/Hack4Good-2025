@@ -1,21 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "reactstrap";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Divider, Snackbar } from "@mui/material";
 import EditableTask from "../dashboard/EditableTask";
 import UpdateTasks from "../dashboard/UpdateTasks";
 import CreateTasks from "../dashboard/CreateTasks";
-import { getAvailableVouchers } from "../../api/voucher";
+import {
+  getAllVoucher,
+  createVoucher,
+  deleteVoucher,
+  updateVoucher,
+} from "../../api/voucher";
 
 interface TaskDataType {
+  _id: string;
   title: string;
   subtitle: string;
   description: string;
   points: number;
   slots: number;
-  acceptedBy: any[];
-  userStatuses: any[];
-  createdAt: Date;
-  updatedAt: Date;
+}
+
+interface TaskRowCreate {
+  _id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  points: number;
+  slots: number;
 }
 
 export default function ManageTasks() {
@@ -23,15 +34,45 @@ export default function ManageTasks() {
   const [openUpdate, setOpenUpdate] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState<TaskDataType | null>(null);
   const [openCreate, setOpenCreate] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const displaySnackbar = (message : string) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+    console.log(message);
+  }
+
+  // close snackbar/toast
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  }
+
+  const handleCreateTask = async (createTask: TaskRowCreate) => {
+    const response = await createVoucher(
+      createTask.title,
+      createTask.subtitle,
+      createTask.description,
+      createTask.points,
+      createTask.slots
+    );
+
+    if (response.status === 200 || response.status === 201) {
+      displaySnackbar("Voucher task created successfully!");
+    } else {
+      displaySnackbar("There was an error in creating the task: " + response.message);
+    }
+
+    handleCloseCreate();
+  };
 
   useEffect(() => {
     const fetchVouchers = async () => {
-      const response = await getAvailableVouchers();
+      const response = await getAllVoucher();
       setTasks(response.voucherInfo);
-      console.log(response);
     };
     fetchVouchers();
-  }, []);
+  }, [handleCreateTask]);
 
   const handleClickOpenUpdate = (row: TaskDataType) => {
     setTaskToEdit(null);
@@ -59,9 +100,22 @@ export default function ManageTasks() {
     setOpenCreate(false);
   };
 
-  const handleUpdateTaskInfo = (updatedTask: TaskDataType) => {
+  const handleUpdateTaskInfo = async (updatedTask: TaskDataType) => {
     handleCloseUpdate();
-    setTaskToEdit(updatedTask);
+    const response = await updateVoucher({
+      id: updatedTask._id,
+      title: updatedTask.title,
+      subtitle: updatedTask.subtitle,
+      description: updatedTask.description,
+      points: updatedTask.points,
+      slots: updatedTask.slots,
+    });
+
+    if (response.status === 200 || response.status === 201) {
+      displaySnackbar("Voucher task updated successfully!");
+    } else {
+      displaySnackbar("There was an error in updating the task: " + response.message);
+    }
   };
 
   return (
@@ -78,23 +132,31 @@ export default function ManageTasks() {
       >
         Add New Task
       </Button>
-
+      <Divider style={{ margin: "16px 0" }} />
       <Row>
-        {tasks.map((item, index) => (
-          <Col xs="12" sm="6" md="4" key={index}>
-            <EditableTask
-              title={item.title}
-              subtitle={item.subtitle}
-              description={item.description}
-              points={item.points}
-              remainingSlots={item.slots}
-              onEdit={() => handleClickOpenUpdate(item)} // Edit task functionality
-              onDelete={() => {
-                /* Add delete functionality here */
-              }} // Delete task functionality
-            />
+        {tasks.length > 0 ? (
+          tasks.map((item, index) => (
+            <Col xs="12" sm="6" md="4" key={index}>
+              <EditableTask
+                title={item.title}
+                subtitle={item.subtitle}
+                description={item.description}
+                points={item.points}
+                remainingSlots={item.slots}
+                onEdit={() => handleClickOpenUpdate(item)} // Edit task functionality
+                onDelete={async () => {
+                  await deleteVoucher(item._id);
+                }}
+              />
+            </Col>
+          ))
+        ) : (
+          <Col xs="12">
+            <Typography variant="body1" color="textSecondary" align="center">
+              Nothing here, create some tasks!
+            </Typography>
           </Col>
-        ))}
+        )}
       </Row>
 
       {taskToEdit && (
@@ -109,7 +171,13 @@ export default function ManageTasks() {
       <CreateTasks
         open={openCreate}
         handleClose={handleCloseCreate}
-        handleUpdateTaskInfo={handleUpdateTaskInfo}
+        handleCreateTask={handleCreateTask}
+      />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
       />
     </Box>
   );

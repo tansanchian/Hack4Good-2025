@@ -126,7 +126,19 @@ export const acceptVoucher = async (req: Request, res: Response) => {
  */
 export const getAvailableVouchers = async (req: Request, res: Response) => {
   try {
-    const vouchers = await Voucher.find({ slots: { $gt: 0 } }); // Only find vouchers with available slots
+    const vouchers = await Voucher.find({ slots: { $gt: 0 } });
+    res.status(200).json(vouchers);
+    return;
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+    return;
+  }
+};
+
+export const getAllVoucher = async (req: Request, res: Response) => {
+  try {
+    const vouchers = await Voucher.find({});
     res.status(200).json(vouchers);
     return;
   } catch (error) {
@@ -158,11 +170,8 @@ export const deleteVoucher = async (req: Request, res: Response) => {
       );
 
       if (userStatusIndex !== -1) {
-        // If the user's status is pending, remove it
-        if (user.userStatuses[userStatusIndex].status === "pending") {
-          user.userStatuses.splice(userStatusIndex, 1);
-          await user.save(); // Save the updated user document
-        }
+        user.userStatuses.splice(userStatusIndex, 1);
+        await user.save(); // Save the updated user document
       }
     }
 
@@ -293,7 +302,7 @@ export const adminApproveRejectVoucher = async (
       }
 
       await User.findByIdAndUpdate(userId, {
-        $inc: { points: voucher.points || 0 },
+        $inc: { voucher: voucher.points || 0 },
       });
     } else {
       if (VoucherStatusVoucher) {
@@ -313,6 +322,63 @@ export const adminApproveRejectVoucher = async (
   } catch (error) {
     console.error("Error processing voucher action:", error);
     res.status(500).json({ message: "Server error" });
+    return;
+  }
+};
+
+export const getUserVoucher = async (req: Request, res: Response) => {
+  const { userId } = req.body;
+
+  try {
+    const user = await User.findById(userId).populate({
+      path: "userStatuses.voucherId", // Path to populate
+      model: "Voucher", // Name of the referenced model
+    });
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    // Return the populated userStatuses
+    res.status(200).json({
+      message: "Vouchers retrieved successfully",
+      userStatuses: user.userStatuses,
+    });
+    return;
+  } catch (error) {
+    console.error("Error retrieving voucher:", error);
+    res.status(500).json({ message: "Server error" });
+    return;
+  }
+};
+
+export const updateVoucher = async (req: Request, res: Response) => {
+  const { id, title, subtitle, description, points, slots } = req.body;
+
+  try {
+    // Retrieve voucher from the database using voucher ID
+    const voucher = await Voucher.findById(id);
+    if (!voucher) {
+      res.status(404).json({ message: "Voucher not found" });
+      return;
+    }
+
+    // Update voucher properties
+    voucher.title = title || voucher.title;
+    voucher.subtitle = subtitle || voucher.subtitle;
+    voucher.description = description || voucher.description;
+    voucher.points = points || voucher.points;
+    voucher.slots = slots || voucher.slots;
+
+    // Save updated voucher
+    await voucher.save();
+
+    res.status(200).json({ message: "Voucher Updated" });
+    return;
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Unknown error when updating voucher" });
     return;
   }
 };
