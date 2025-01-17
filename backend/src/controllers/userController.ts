@@ -201,7 +201,7 @@ export async function getAllUsers(req: Request, res: Response) {
  * - 500: Server error.
  */
 export const updateUser = async (req: Request, res: Response) => {
-  const { id, username, email, phoneNumber, gender, voucher, isActive, newPassword } = req.body;
+  const { id, username, email, phoneNumber, gender, isActive, newPassword } = req.body;
 
   try {
     // Retrieve user from database
@@ -257,7 +257,6 @@ export const updateUser = async (req: Request, res: Response) => {
     user.username = username || user.username;
     user.phoneNumber = phoneNumber || user.phoneNumber;
     user.gender = gender || user.gender;
-    user.voucher = voucher || user.voucher;
 
     if (isActive !== null && isActive !== undefined) {
       user.isActive = (isActive !== 0);
@@ -404,7 +403,7 @@ export async function getVoucherBalance(req: Request, res: Response) {
       return;
     }
     
-    res.status(200).json({ message: `Voucher balance for user ${userId} is ${user.voucher}` });
+    res.status(200).json({ message: `Voucher balance for user ${userId} is ${user.acceptedVouchers}` });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Unknown error when getting voucher balance!" });
