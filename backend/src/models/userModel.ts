@@ -68,7 +68,7 @@ const userSchema = new mongoose.Schema(
     isAdmin: {
       type: Boolean,
       required: true,
-      default: false,
+      default: true,
     },
     acceptedVouchers: {
       type: [mongoose.Schema.Types.ObjectId], // Store voucher IDs

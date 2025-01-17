@@ -43,11 +43,11 @@ export async function createUser(req: Request, res: Response) {
     }
 
     // // Username uniqueness check
-    // const existingUser = await User.findOne({ username });
-    // if (existingUser) {
-    //   res.status(400).json({ message: "Username is already taken" });
-    //   return;
-    // }
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      res.status(400).json({ message: "Username is already taken" });
+      return;
+    }
 
     // Email uniqueness check
     const existingEmail = await User.findOne({ email });
@@ -419,7 +419,7 @@ export async function getCart(req: Request, res: Response) {
       return;
     }
 
-    const user = await  User.findById(userId);          
+    const user = await User.findById(userId);          
     if (!user) {
       res.status(404).json({ message: `User ${userId} not found` });
       return;
@@ -441,7 +441,7 @@ export async function getTransactionHistory(req: Request, res: Response) {
       return;
     }
 
-    const user = await  User.findById(userId);    
+    const user = await User.findById(userId);    
     if (!user) {
       res.status(404).json({ message: `User ${userId} not found` });
       return;

@@ -89,11 +89,6 @@ router.delete("/:id", protectRoute, deleteUser);
  * Body:
  * - `isAdmin` (boolean): Specifies whether the user should be granted admin privileges.
  */
-router.patch(
-  "/:id/privilege",
-  protectRoute,
-  adminProtectRoute,
-  updateUserPrivilege
-);
+router.patch("/:id/privilege", protectRoute, adminProtectRoute, updateUserPrivilege);
 
 export default router;
