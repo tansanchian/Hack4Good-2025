@@ -34,7 +34,11 @@ export default function MenuContent() {
       icon: <AnalyticsRoundedIcon />,
       path: "/transactions",
     },
-    { text: "Voucher Task", icon: <AssignmentRounded />, path: "/VoucherTask" },
+    {
+      text: "Voucher Task",
+      icon: <AssignmentRounded />,
+      path: "/voucher-task",
+    },
     { text: "Accept Tasks", icon: <TaskRounded />, path: "/tasks" },
   ];
 
@@ -51,7 +55,7 @@ export default function MenuContent() {
     {
       text: "Voucher Approval",
       icon: <AssignmentRounded />,
-      path: "/voucherApproval",
+      path: "/voucher-approval",
     },
   ];
 
@@ -74,7 +78,7 @@ export default function MenuContent() {
       if (path === mainListItems[index].path) {
         setSelectedIndex(index);
         return;
-      };
+      }
     }
     for (
       index = mainListItems.length;

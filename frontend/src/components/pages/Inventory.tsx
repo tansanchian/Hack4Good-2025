@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { IconButton, Button } from "@mui/material";
-import { DataGrid, GridRowClassNameParams, GridColDef } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridRowClassNameParams,
+  GridToolbar,
+  GridColDef,
+} from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UpdateInventory from "../dashboard/UpdateInventory";
@@ -175,6 +180,127 @@ const Inventory: React.FC = () => {
       preorder: "0",
     },
     {
+      id: "232",
+      name: "Gadget D",
+      description: "lol",
+      photoURL:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
+      category: "Furniture",
+      quantity: "15",
+      price: "50",
+      preorder: "0",
+    },
+    {
+      id: "121",
+      name: "Gadget D",
+      description: "lol",
+      photoURL:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
+      category: "Furniture",
+      quantity: "15",
+      price: "50",
+      preorder: "0",
+    },
+    {
+      id: "122",
+      name: "Gadget D",
+      description: "lol",
+      photoURL:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
+      category: "Furniture",
+      quantity: "15",
+      price: "50",
+      preorder: "0",
+    },
+    {
+      id: "133",
+      name: "Gadget D",
+      description: "lol",
+      photoURL:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
+      category: "Furniture",
+      quantity: "15",
+      price: "50",
+      preorder: "0",
+    },
+    {
+      id: "27",
+      name: "Gadget D",
+      description: "lol",
+      photoURL:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
+      category: "Furniture",
+      quantity: "15",
+      price: "50",
+      preorder: "0",
+    },
+    {
+      id: "26",
+      name: "Gadget D",
+      description: "lol",
+      photoURL:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
+      category: "Furniture",
+      quantity: "15",
+      price: "50",
+      preorder: "0",
+    },
+    {
+      id: "25",
+      name: "Gadget D",
+      description: "lol",
+      photoURL:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
+      category: "Furniture",
+      quantity: "15",
+      price: "50",
+      preorder: "0",
+    },
+    {
+      id: "23",
+      name: "Gadget D",
+      description: "lol",
+      photoURL:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
+      category: "Furniture",
+      quantity: "15",
+      price: "50",
+      preorder: "0",
+    },
+    {
+      id: "22",
+      name: "Gadget D",
+      description: "lol",
+      photoURL:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
+      category: "Furniture",
+      quantity: "15",
+      price: "50",
+      preorder: "0",
+    },
+    {
+      id: "21",
+      name: "Gadget D",
+      description: "lol",
+      photoURL:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
+      category: "Furniture",
+      quantity: "15",
+      price: "50",
+      preorder: "0",
+    },
+    {
+      id: "56",
+      name: "Gadget D",
+      description: "lol",
+      photoURL:
+        "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350",
+      category: "Furniture",
+      quantity: "15",
+      price: "50",
+      preorder: "0",
+    },
+    {
       id: "5",
       name: "Tool E",
       description: "lol",
@@ -188,10 +314,15 @@ const Inventory: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: { sm: "100%", md: "1700px", minHeight: "100vh" },
+      }}
+    >
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Invetory List
-      </Typography>{" "}
+        Inventory List
+      </Typography>
       <Button
         variant="contained"
         color="primary"
@@ -200,9 +331,11 @@ const Inventory: React.FC = () => {
       >
         Add New Product
       </Button>
+
+      {/* DataGrid container */}
+
       <DataGrid
         rows={rows}
-        rowHeight={80}
         columns={columns}
         getRowClassName={(params: GridRowClassNameParams) =>
           params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
@@ -212,7 +345,11 @@ const Inventory: React.FC = () => {
             backgroundColor: "secondary.main",
           },
         }}
+        slots={{
+          toolbar: GridToolbar,
+        }}
       />
+
       {selectedItem && (
         <UpdateInventory
           open={openUpdate}

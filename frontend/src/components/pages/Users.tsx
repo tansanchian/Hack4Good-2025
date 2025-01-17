@@ -5,7 +5,13 @@ import { Button, IconButton, Stack } from "@mui/material";
 import { DataGrid, GridRowClassNameParams, GridColDef } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { createNewUser, deleteAccount, getUsers, updateAccount, updateUserPrivilege } from "../../api/user";
+import {
+  createNewUser,
+  deleteAccount,
+  getUsers,
+  updateAccount,
+  updateUserPrivilege,
+} from "../../api/user";
 import { useAuth } from "../../contexts/AuthContext";
 import { PasswordRounded } from "@mui/icons-material";
 import UpdateUserPassword from "../dashboard/UpdateUserPassword";
@@ -93,7 +99,7 @@ const Users: React.FC = () => {
   };
 
   const handleAddUserInfo = (newUser: UserRowPassword) => {
-    createNewUser(newUser).then(response => {
+    createNewUser(newUser).then((response) => {
       if (response.status === 201) {
         console.log("User created successfully");
         console.log("FULL RESPONSE: ", response);
@@ -103,7 +109,7 @@ const Users: React.FC = () => {
         updateRows();
       }
     });
-  }
+  };
 
   const handleUpdateUserInfo = (updatedUser: UserRow) => {
     handleCloseUpdate();
@@ -206,25 +212,30 @@ const Users: React.FC = () => {
               borderRadius: "50%",
             }}
             aria-label="edit"
-            onClick={() => handleClickOpenUpdatePassword({
-              id: params.row.id,
-              newPassword: "",
-              confirmPassword: ""
-            })}
+            onClick={() =>
+              handleClickOpenUpdatePassword({
+                id: params.row.id,
+                newPassword: "",
+                confirmPassword: "",
+              })
+            }
           >
             <PasswordRounded fontSize="small" sx={{ color: "green" }} />
           </IconButton>
-          { (auth.id !== params.id) ? 
-          <IconButton
-            sx={{
-              border: "none",
-              borderRadius: "50%",
-            }}
-            aria-label="delete"
-            onClick={() => handleClickOpenDelete((params.row as UserRow).id)}
-          >
-            <DeleteIcon fontSize="small" sx={{ color: "red" }} />
-          </IconButton> : <></> }
+          {auth.id !== params.id ? (
+            <IconButton
+              sx={{
+                border: "none",
+                borderRadius: "50%",
+              }}
+              aria-label="delete"
+              onClick={() => handleClickOpenDelete((params.row as UserRow).id)}
+            >
+              <DeleteIcon fontSize="small" sx={{ color: "red" }} />
+            </IconButton>
+          ) : (
+            <></>
+          )}
         </Box>
       ),
     },
@@ -258,7 +269,12 @@ const Users: React.FC = () => {
   useEffect(updateRows, [openUpdate, openUpdatePassword]);
 
   return (
-    <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: { sm: "100%", md: "1700px" },
+      }}
+    >
       <Stack direction="row" display="flex" alignItems="center" sx={{ mb: 2 }}>
         <Typography flexGrow="1" component="h2" variant="h6">
           Manage Users

@@ -52,11 +52,61 @@ const ProductData: ProductDataType[] = [
       "Juicy, seedless grapes that are perfect for snacking or adding to your favorite salads.",
     quantity: 0,
   },
+  {
+    image: bg4,
+    title: "grape",
+    subtitle: "Seedless and fresh",
+    price: "$4.50",
+    description:
+      "Juicy, seedless grapes that are perfect for snacking or adding to your favorite salads.",
+    quantity: 0,
+  },
+  {
+    image: bg4,
+    title: "grape",
+    subtitle: "Seedless and fresh",
+    price: "$4.50",
+    description:
+      "Juicy, seedless grapes that are perfect for snacking or adding to your favorite salads.",
+    quantity: 0,
+  },
+  {
+    image: bg4,
+    title: "grape",
+    subtitle: "Seedless and fresh",
+    price: "$4.50",
+    description:
+      "Juicy, seedless grapes that are perfect for snacking or adding to your favorite salads.",
+    quantity: 0,
+  },
+  {
+    image: bg4,
+    title: "grape",
+    subtitle: "Seedless and fresh",
+    price: "$4.50",
+    description:
+      "Juicy, seedless grapes that are perfect for snacking or adding to your favorite salads.",
+    quantity: 0,
+  },
+  {
+    image: bg4,
+    title: "grape",
+    subtitle: "Seedless and fresh",
+    price: "$4.50",
+    description:
+      "Juicy, seedless grapes that are perfect for snacking or adding to your favorite salads.",
+    quantity: 0,
+  },
 ];
 
 export default function Products() {
   return (
-    <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: { sm: "100%", md: "1700px" },
+      }}
+    >
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
         Products
       </Typography>
