@@ -8,7 +8,7 @@ import Home from "./components/pages/home";
 import Invetory from "./components/pages/Inventory";
 import AuditLogsPage from "./components/pages/AuditLogsPage";
 import ReportsPage from "./components/pages/ReportsPage";
-import AdminDashboard from "./components/pages/AdminDashboard";
+import ManageRequests from "./components/pages/ManageRequests";
 import Products from "./components/pages/Products";
 import Transactions from "./components/pages/Transactions";
 import VoucherTask from "./components/pages/VoucherTask";
@@ -119,8 +119,8 @@ ReactDOM.createRoot(root!).render(
           <Route index element={<Home />} />
           <Route path="products" element={<Products />} />
           <Route path="transactions" element={<Transactions />} />
-          <Route path="voucherTask" element={<VoucherTask />} />
-          <Route path="voucherApproval" element={<VoucherApprovalReject />} />
+          <Route path="voucher-task" element={<VoucherTask />} />
+          <Route path="voucher-approval" element={<VoucherApprovalReject />} />
           <Route path="tasks" element={<Tasks />} />
           <Route
             path="manage-users"
@@ -135,7 +135,7 @@ ReactDOM.createRoot(root!).render(
             path="manage-requests"
             element={
               <AdminRoute
-                adminRoute={<AdminDashboard />}
+                adminRoute={<ManageRequests />}
                 nonAdminRoute={<Navigate to="/" />}
               />
             }
