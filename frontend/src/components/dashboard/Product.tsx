@@ -118,6 +118,12 @@ const Product: React.FC<ProductProps> = ({
         }}
         onClick={toggleModal}
       >
+        <Typography
+          variant="body2"
+          sx={{ fontWeight: "bold", fontSize: "20px" }}
+        >
+          {title}
+        </Typography>
         <CardMedia
           component="img"
           height="200"
