@@ -1,61 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "reactstrap";
 import { Box, Typography, Button } from "@mui/material";
-import EditableTask from "../dashboard/editableTask";
+import EditableTask from "../dashboard/EditableTask";
 import UpdateTasks from "../dashboard/UpdateTasks";
 import CreateTasks from "../dashboard/CreateTasks";
+import { getAvailableVouchers } from "../../api/voucher";
 
 interface TaskDataType {
-  id: number;
   title: string;
   subtitle: string;
   description: string;
   points: number;
-  remainingSlots: number;
+  slots: number;
+  acceptedBy: any[];
+  userStatuses: any[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const initialTaskData: TaskDataType[] = [
-  {
-    id: 1,
-    title: "Apple",
-    subtitle: "Complete the apple task",
-    description:
-      "This task involves sorting apples based on their size and quality.",
-    points: 5,
-    remainingSlots: 50,
-  },
-  {
-    id: 2,
-    title: "Banana",
-    subtitle: "Complete the banana task",
-    description:
-      "This task requires you to count and bundle bananas for distribution.",
-    points: 5,
-    remainingSlots: 50,
-  },
-  {
-    id: 3,
-    title: "Orange",
-    subtitle: "Complete the orange task",
-    description: "This task includes juicing oranges for a special event.",
-    points: 5,
-    remainingSlots: 50,
-  },
-  {
-    id: 4,
-    title: "Grape",
-    subtitle: "Complete the grape task",
-    description: "This task involves sorting and packing grapes for delivery.",
-    points: 5,
-    remainingSlots: 50,
-  },
-];
-
 export default function ManageTasks() {
-  const [tasks, setTasks] = useState<TaskDataType[]>(initialTaskData);
+  const [tasks, setTasks] = useState<TaskDataType[]>([]);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState<TaskDataType | null>(null);
   const [openCreate, setOpenCreate] = useState(false);
+
+  useEffect(() => {
+    const fetchVouchers = async () => {
+      const response = await getAvailableVouchers();
+      setTasks(response.voucherInfo);
+      console.log(response);
+    };
+    fetchVouchers();
+  }, []);
 
   const handleClickOpenUpdate = (row: TaskDataType) => {
     setTaskToEdit(null);
@@ -111,7 +87,7 @@ export default function ManageTasks() {
               subtitle={item.subtitle}
               description={item.description}
               points={item.points}
-              remainingSlots={item.remainingSlots}
+              remainingSlots={item.slots}
               onEdit={() => handleClickOpenUpdate(item)} // Edit task functionality
               onDelete={() => {
                 /* Add delete functionality here */
