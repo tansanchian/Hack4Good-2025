@@ -16,7 +16,7 @@
 
 ## Overview
 
-This project is designed to enhance the operational efficiency and user experience for the Muhammadiyah Welfare Home. It consists of two main components: a Backend for managing data and a Frontend for user interaction.
+This project is designed to enhance the operational efficiency and user experience for the Muhammadiyah Welfare Home. It consists of two main components: a **Backend** for managing data and a **Frontend** for user interaction.
 
 - Frontend: The user interface, developed using React, where users can interact with the application.
 - Backend: A Express.js-based server that handles business logic, data storage, and communication with the frontend.
@@ -36,7 +36,7 @@ Follow these steps to set up the project on your local machine.
 
 Start by cloning the repository to your local device:
 
-git clone <repository-url>
+`git clone <repository-url>`
 
 Replace <repository-url> with the URL of your Git repository.
 
@@ -44,19 +44,19 @@ Replace <repository-url> with the URL of your Git repository.
 
 1. Navigate to the frontend directory:
 
-cd frontend
+`cd frontend`
 
 2. Install the required dependencies:
 
-npm install
+`npm install`
 
 3. Build the frontend project:
 
-npm run build
+`npm run build`
 
 4. Start the frontend development server:
 
-npm run
+`npm run`
 
 Your frontend should now be running. The application will usually be accessible at [http://localhost:5173](http://localhost:5173) by default.
 
@@ -64,19 +64,19 @@ Your frontend should now be running. The application will usually be accessible 
 
 1. Navigate to the backend directory:
 
-cd backend
+`cd backend`
 
 2. Install the required backend dependencies:
 
-npm install
+`npm install`
 
 3. Build the backend project:
 
-npm run build
+`npm run build`
 
 4. Start the backend server:
 
-npm run
+`npm run`
 
 The backend server should now be running, typically accessible at [http://localhost:8080](http://localhost:8080) (depending on your configuration).
 
@@ -93,16 +93,16 @@ You can now begin working on the application, adding features, fixing bugs, or a
 
 ### For Residents:
 
-- User-Friendly Dashboard: View voucher balances, transaction history, and available products.
-- Item Requests: Easily request items from the minimart or place preorders for out-of-stock products.
-- Secure Login System: Login with an optional mobile-based password reset feature.
+- **User-Friendly Dashboard**: View voucher balances, transaction history, and available products.
+- **Item Requests**: Easily request items from the minimart or place preorders for out-of-stock products.
+- **Secure Login System**: Login with an optional mobile-based password reset feature.
 
 ### For Admins:
 
-- User Management: Add, suspend, and reset passwords for residents.
-- Task Approval: Approve or reject voucher tasks and product requests with detailed tracking.
-- Inventory Management: Maintain and update inventory with audit logs for accountability.
-- Reporting: Generate comprehensive reports, such as weekly requests and inventory summaries.
+- **User Management**: Add, suspend, and reset passwords for residents.
+- **Task Approval**: Approve or reject voucher tasks and product requests with detailed tracking.
+- **Inventory Management**: Maintain and update inventory with audit logs for accountability.
+- **Reporting**: Generate comprehensive reports, such as weekly requests and inventory summaries.
 
 ## Solutions
 
